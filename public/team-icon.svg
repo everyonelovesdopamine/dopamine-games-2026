@@ -1,0 +1,19 @@
+<svg viewBox="0 0 160 75" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+  <!-- Left heart-figure -->
+  <path d="M30,7 C30,-2 19,-6 14,2 C9,-6 -2,-2 -2,7 C-2,17 14,27 14,27 C14,27 30,17 30,7Z" transform="translate(2,0)"/>
+  <rect x="11" y="29" width="5" height="21" rx="2.5"/>
+  <rect x="19" y="29" width="5" height="21" rx="2.5"/>
+
+  <!-- Figure 2: male (rectangular body) -->
+  <circle cx="62" cy="13" r="11"/>
+  <path d="M50,27 L50,62 L57,62 L57,46 L67,46 L67,62 L74,62 L74,27 Z"/>
+
+  <!-- Figure 3: female (flared silhouette) -->
+  <circle cx="98" cy="13" r="11"/>
+  <path d="M89,27 C85,31 80,54 87,62 L93,55 L98,62 L103,55 L109,62 C116,54 111,31 107,27 Z"/>
+
+  <!-- Right heart-figure -->
+  <path d="M30,7 C30,-2 19,-6 14,2 C9,-6 -2,-2 -2,7 C-2,17 14,27 14,27 C14,27 30,17 30,7Z" transform="translate(126,0)"/>
+  <rect x="133" y="29" width="5" height="21" rx="2.5"/>
+  <rect x="141" y="29" width="5" height="21" rx="2.5"/>
+</svg>

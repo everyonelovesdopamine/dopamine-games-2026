@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(cp \"/Users/simonsaidso/Desktop/Dopamine Games 2026/BRAND/01. Logo/dopamine-logo-wordmark-white.svg\" \"/Users/simonsaidso/Dopamine Games 2026/public/logo-white.svg\")",
+      "Bash(cp \"/Users/simonsaidso/Desktop/Dopamine Games 2026/BRAND/01. Logo/dopamine-logo-wordmark-white.png\" \"/Users/simonsaidso/Dopamine Games 2026/public/logo-white.png\")",
+      "Bash(cp \"/Users/simonsaidso/Desktop/Dopamine Games 2026/BRAND/02. Logo Symbol/Style 01/dopamine-logo-symbol-style-1-white.svg\" \"/Users/simonsaidso/Dopamine Games 2026/public/logo-symbol.svg\")",
+      "Bash(cp \"/Users/simonsaidso/Desktop/Dopamine Games 2026/BRAND/02. Logo Symbol/Style 01/dopamine-logo-symbol-style-1-white.png\" \"/Users/simonsaidso/Dopamine Games 2026/public/logo-symbol.png\")",
+      "Bash(__NEW_LINE_6f012690652ecb75__ mkdir:*)",
+      "WebFetch(domain:athxgames.com)",
+      "WebFetch(domain:www.daybreaker.com)",
+      "WebFetch(domain:thresholdraces.com)",
+      "Bash(npx tsc:*)",
+      "Bash(find '/Users/simonsaidso/Dopamine Games 2026' -name *.md)",
+      "mcp__Claude_Preview__preview_start",
+      "Read(//usr/local/lib/node_modules/npm/bin/**)",
+      "Read(//Users/simonsaidso/.nvm/versions/**)",
+      "Read(//usr/local/bin/**)",
+      "Read(//opt/homebrew/**)",
+      "Read(//usr/local/**)",
+      "Bash(grep -E \"\\\\.\\(png|jpg|pdf|txt|md\\)$\")",
+      "Bash(sips -s format png \"/Users/simonsaidso/Dopamine Games 2026/public/images/adidas logos/adidasLogo \\(2\\).eps\" --out \"/Users/simonsaidso/Dopamine Games 2026/public/images/adidas logos/adidas-logo.png\")",
+      "Bash(qlmanage -t -s 800 -o \"/Users/simonsaidso/Dopamine Games 2026/public/images/adidas logos/\" \"/Users/simonsaidso/Dopamine Games 2026/public/images/adidas logos/adidasLogo \\(2\\).eps\")",
+      "Bash(ls ~/Downloads/\"Untitled design \\(4\\)/\")",
+      "Bash(ls '~/Downloads/Untitled design \\(4\\).zip')",
+      "Bash(unzip -l '~/Downloads/Untitled design \\(4\\).zip')",
+      "Bash(unzip -l '/Users/simonsaidso/Downloads/Untitled design \\(4\\).zip')",
+      "Bash(unzip -o \"/Users/simonsaidso/Downloads/Untitled design \\(4\\).zip\" -d \"/Users/simonsaidso/Downloads/adidas-logo-extract/\")",
+      "Bash(tmutil listlocalsnapshots:*)",
+      "Bash(xargs ls:*)",
+      "Bash(sort -k9M -k10n -k11)"
+    ]
+  }
+}
