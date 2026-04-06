@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { getSponsors } from '@/lib/api';
+import { Component as EtherealShadow } from '@/components/ui/etheral-shadow';
 
 interface Sponsor {
   sponsor_id: string; sponsor_name: string; logo_url: string; website_url?: string; tier: string;
@@ -70,14 +71,19 @@ export default function HomePage() {
             animation: 'heroZoom 18s ease-in-out infinite alternate',
           }}
         />
+        {/* ethereal shadow overlay */}
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', mixBlendMode: 'screen', opacity: 0.55 }}>
+          <EtherealShadow
+            color="rgba(24, 91, 197, 1)"
+            animation={{ scale: 100, speed: 90 }}
+            noise={{ opacity: 1, scale: 1.2 }}
+            sizing="fill"
+          />
+        </div>
         {/* dark gradient */}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(20,21,20,0.1) 0%, transparent 25%, transparent 60%, rgba(20,21,20,0.85) 95%, #141514 100%)' }} />
         {/* grain */}
         <div className="grain-overlay" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
-        {/* shimmer */}
-        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-          <div style={{ position: 'absolute', top: 0, bottom: 0, width: '25%', background: 'linear-gradient(to right, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%)', animation: 'shimmerSweep 8s ease-in-out infinite', animationDelay: '2s' }} />
-        </div>
         {/* concentric rings */}
         {[300, 460, 620].map((size, i) => (
           <div key={size} style={{ position: 'absolute', left: '50%', top: '58%', width: size, height: size, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.05)', transform: 'translate(-50%, -50%)', pointerEvents: 'none', animation: `ringPulse ${7 + i * 2.5}s ease-in-out infinite`, animationDelay: `${i * 1.2}s` }} />
@@ -85,7 +91,7 @@ export default function HomePage() {
 
         <h1 style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', opacity: 0 }}>the dopamine games 2026</h1>
 
-        {/* spacer — pushes CTA group to bottom of hero */}
+        {/* spacer: pushes CTA group to bottom of hero */}
         <div style={{ flex: 1, position: 'relative', zIndex: 2 }} />
 
         {/* bottom spacer */}
@@ -110,7 +116,7 @@ export default function HomePage() {
           ))}
         </div>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 40 }}>
-          <a href="/register/" style={{ padding: '14px 28px', borderRadius: 100, backgroundColor: '#fff', color: '#141514', fontWeight: 700, fontSize: 'clamp(13px, 2vw, 15px)', textDecoration: 'none', transition: 'opacity 0.2s', whiteSpace: 'nowrap' }}
+          <a href="https://team-aretas.com/competitions/3444" target="_blank" rel="noopener noreferrer" style={{ padding: '14px 28px', borderRadius: 100, backgroundColor: '#fff', color: '#141514', fontWeight: 700, fontSize: 'clamp(13px, 2vw, 15px)', textDecoration: 'none', transition: 'opacity 0.2s', whiteSpace: 'nowrap' }}
             onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
           >enter the games</a>
@@ -124,11 +130,17 @@ export default function HomePage() {
 
       {/* ──────────────────────── PARTNER STRIP ──────────────────────── */}
       <div style={{ backgroundColor: '#141514', overflow: 'hidden', padding: '22px 0', position: 'relative' }}>
-        <div style={{ display: 'flex', alignItems: 'center', animation: 'marquee 24s linear infinite', whiteSpace: 'nowrap' }}>
-          {Array.from({ length: 2 }).map((_, rep) => (
+        <div style={{ display: 'flex', alignItems: 'center', animation: 'marquee 56s linear infinite', whiteSpace: 'nowrap' }}>
+          {Array.from({ length: 4 }).map((_, rep) => (
             <div key={rep} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-              {Array.from({ length: 10 }).map((_, i) => (
-                <img key={`${rep}-${i}`} src="/images/adidas logos/adidas-stripes.png" alt="adidas" style={{ height: 56, marginRight: 84, filter: 'invert(1)', mixBlendMode: 'screen', opacity: 0.5 }} />
+              {[
+                { src: '/images/adidas logos/adidaslogowhite.png', alt: 'adidas', h: 48 },
+                { src: '/images/sponsors/teufel-white.svg', alt: 'teufel', h: 38 },
+                { src: '/images/sponsors/burgermeister-placeholder-white.svg', alt: 'burgermeister', h: 54 },
+                { src: '/images/sponsors/esn-placeholder-white.svg', alt: 'esn', h: 44 },
+                { src: '/images/sponsors/vly-placeholder-white.svg', alt: 'vly', h: 44 },
+              ].map((logo, i) => (
+                <img key={`${rep}-${i}`} src={logo.src} alt={logo.alt} style={{ height: logo.h, marginRight: 84, opacity: 0.55 }} />
               ))}
             </div>
           ))}
@@ -136,7 +148,7 @@ export default function HomePage() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════
-          YOUR DAY — overview of the three chapters
+          YOUR DAY: overview of the three chapters
       ══════════════════════════════════════════════════════════════ */}
       <style>{`
         .chapter-card-light { transition: transform 0.3s ease, box-shadow 0.3s ease; }
@@ -162,11 +174,11 @@ export default function HomePage() {
               one day. three chapters.
             </h2>
             <p style={{ fontSize: 17, color: '#707070', lineHeight: 1.7, maxWidth: 500, margin: '0 auto' }}>
-              June 6, Berlin. from the first rep to the last song — this is the full experience.
+              june 6, berlin. from the first rep to the last song, this is the full experience.
             </p>
           </div>
 
-          {/* swipe hint — mobile only */}
+          {/* swipe hint: mobile only */}
           <div className="swipe-hint" style={{ display: 'none' }}>
             <span style={{ fontSize: 12, fontWeight: 500, color: '#B0B0B0', letterSpacing: '0.06em' }}>swipe</span>
             <span style={{ fontSize: 16, color: '#B0B0B0' }}>→</span>
@@ -178,7 +190,7 @@ export default function HomePage() {
               {
                 num: '01', label: 'perform',
                 headline: 'the competition.',
-                copy: 'seven stations. teams of two. cardio, strength & conditioning, and a finisher. you go, i go — every rep counts.',
+                copy: 'seven stations. teams of two. cardio, strength & conditioning, and a finisher. you go, i go. every rep counts.',
                 stats: [{ k: 'stations', v: '07' }, { k: 'format', v: 'teams of 2' }, { k: 'duration', v: '6 min / station' }],
                 icon: '/images/icons/community-hearts-black.png',
                 href: '/workouts/',
@@ -188,7 +200,7 @@ export default function HomePage() {
               {
                 num: '02', label: 'play',
                 headline: 'the open floor.',
-                copy: 'bookable sessions across four spaces — strength, movement, recovery, and community. no competition. just show up and move.',
+                copy: 'bookable sessions across four spaces. strength, movement, recovery, community. no competition. just show up and move.',
                 stats: [{ k: 'spaces', v: '04' }, { k: 'sessions', v: '16+' }, { k: 'access', v: 'open' }],
                 icon: '/images/icons/duo-running-hearts-black.png',
                 href: '/open-play/',
@@ -245,7 +257,7 @@ export default function HomePage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          CHAPTER 1 — PERFORM
+          CHAPTER 1: PERFORM
       ══════════════════════════════════════════════════════════════ */}
       <section className="grain-overlay cinematic-section" style={{ position: 'relative', overflow: 'hidden' }}>
         <img src="/images/photos/team-sled-push-cheering.jpg" alt="the competition" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 35%' }} />
@@ -303,14 +315,14 @@ export default function HomePage() {
             <img src="/images/icons/community-hearts-black.png" alt="" aria-hidden="true" style={{ height: 40, opacity: 0.5 }} />
             <img src="/images/icons/duo-running-hearts-black.png" alt="" aria-hidden="true" style={{ height: 40, opacity: 0.5 }} />
           </div>
-          <p style={{ fontSize: 'clamp(32px, 4vw, 44px)', fontWeight: 700, color: '#141514', maxWidth: 600, margin: '0 auto', lineHeight: 1.15 }}>
+          <p style={{ fontSize: 'clamp(32px, 4vw, 44px)', fontWeight: 700, color: '#141514', margin: 0, lineHeight: 1.15, textAlign: 'center' }}>
             compete. play. or do both.
           </p>
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          CHAPTER 2 — PLAY
+          CHAPTER 2: PLAY
       ══════════════════════════════════════════════════════════════ */}
       <section className="grain-overlay cinematic-section" style={{ position: 'relative', overflow: 'hidden' }}>
         <img src="/images/photos/athlete-laughing-post-workout.jpg" alt="open play" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
@@ -332,7 +344,7 @@ export default function HomePage() {
             </h2>
 
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, marginBottom: 32, maxWidth: 440 }}>
-              book a session, drop into a class, or just explore. strength, movement, recovery, community — there's something for every kind of person.
+              book a session, drop into a class, or just explore. strength, movement, recovery, community. something for every kind of person.
             </p>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }}>
@@ -372,14 +384,14 @@ export default function HomePage() {
           <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginBottom: 28 }}>
             <img src="/images/icons/community-hearts-black.png" alt="" aria-hidden="true" style={{ height: 40, opacity: 0.5 }} />
           </div>
-          <p style={{ fontSize: 'clamp(32px, 4vw, 44px)', fontWeight: 700, color: '#141514', maxWidth: 600, margin: '0 auto', lineHeight: 1.15 }}>
+          <p style={{ fontSize: 'clamp(32px, 4vw, 44px)', fontWeight: 700, color: '#141514', margin: 0, lineHeight: 1.15, textAlign: 'center' }}>
             the reps are done.<br />the night is not.
           </p>
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          CHAPTER 3 — PARTY
+          CHAPTER 3: PARTY
       ══════════════════════════════════════════════════════════════ */}
       <section id="party" className="grain-overlay cinematic-section" style={{ position: 'relative', overflow: 'hidden' }}>
         <img src="/images/photos/LesMillsxSportsbase_196 (3).jpg" alt="party" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }} />
@@ -413,12 +425,6 @@ export default function HomePage() {
               ))}
             </div>
 
-            <a href="/register/" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '16px 40px', borderRadius: 100, backgroundColor: '#fff', color: '#141514', fontWeight: 700, fontSize: 14, textDecoration: 'none', transition: 'opacity 0.2s' }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-            >
-              rsvp to the party →
-            </a>
           </div>
         </div>
       </section>
@@ -432,7 +438,7 @@ export default function HomePage() {
           {/* main games icon */}
           <img src="/images/icons/community-hearts-black.png" alt="" aria-hidden="true" style={{ height: 56, marginBottom: 36, opacity: 0.06 }} />
 
-          <p style={{ fontSize: 12, fontWeight: 500, color: '#707070', marginBottom: 24 }}>June 6, 2026 · Berlin</p>
+          <p style={{ fontSize: 12, fontWeight: 500, color: '#707070', marginBottom: 24 }}>june 6, 2026 · berlin</p>
           <h2 style={{ fontSize: 'clamp(46px, 7vw, 88px)', fontWeight: 700, lineHeight: 0.95, marginBottom: 20 }}>
             show up.<br />
             move together.
@@ -447,17 +453,11 @@ export default function HomePage() {
           </div>
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href="/register/" style={{ padding: '16px 40px', borderRadius: 100, backgroundColor: '#141514', color: '#fff', fontWeight: 700, fontSize: 14, transition: 'opacity 0.2s' }}
+            <a href="https://team-aretas.com/competitions/3444" target="_blank" rel="noopener noreferrer" style={{ padding: '16px 40px', borderRadius: 100, backgroundColor: '#141514', color: '#fff', fontWeight: 700, fontSize: 14, transition: 'opacity 0.2s' }}
               onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.75')}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
               enter the games
-            </a>
-            <a href="/open-play/" style={{ padding: '16px 40px', borderRadius: 100, border: '1px solid #D0D0D0', color: '#707070', fontWeight: 500, fontSize: 14, transition: 'all 0.2s' }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#141514'; e.currentTarget.style.color = '#141514'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#D0D0D0'; e.currentTarget.style.color = '#707070'; }}
-            >
-              book open play
             </a>
           </div>
         </div>

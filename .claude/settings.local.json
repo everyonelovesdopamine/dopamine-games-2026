@@ -29,7 +29,17 @@
       "Bash(unzip -o \"/Users/simonsaidso/Downloads/Untitled design \\(4\\).zip\" -d \"/Users/simonsaidso/Downloads/adidas-logo-extract/\")",
       "Bash(tmutil listlocalsnapshots:*)",
       "Bash(xargs ls:*)",
-      "Bash(sort -k9M -k10n -k11)"
+      "Bash(sort -k9M -k10n -k11)",
+      "Bash(/usr/local/bin/npm install:*)",
+      "Bash(ls /usr/local/bin/node*)",
+      "Bash(PATH=/usr/local/bin:/usr/bin:/bin /usr/local/bin/npm install framer-motion)",
+      "WebFetch(domain:thedopaminestudio.com)",
+      "Bash(/opt/homebrew/bin/npx --version)",
+      "Bash(/usr/local/bin/npx --version)",
+      "Bash(export PATH=\"/opt/homebrew/bin:/usr/local/bin:$HOME/.nvm/versions/node/*/bin:$PATH\")",
+      "Bash(npx --version)",
+      "Bash(open http://localhost:3000)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)"
     ]
   }
 }

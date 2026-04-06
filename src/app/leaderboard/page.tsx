@@ -76,17 +76,17 @@ const TEAMS: Team[] = [
 type Section = 'overall' | 'cardio' | 'strength' | 'medcon' | 'finisher';
 
 const SECTIONS: { id: Section; label: string; description: string; unit: string }[] = [
-  { id: 'overall', label: 'overall', description: 'Combined score across all four sections', unit: 'pts total' },
-  { id: 'cardio', label: 'cardio', description: 'Ski Erg · Bike · Row', unit: 'pts' },
-  { id: 'strength', label: 'strength', description: 'Sandbag · Deadlift · Press', unit: 'pts' },
-  { id: 'medcon', label: 'med con', description: 'Two-movement conditioning block', unit: 'pts' },
-  { id: 'finisher', label: 'finisher', description: 'Final knockout station', unit: 'pts' },
+  { id: 'overall', label: 'overall', description: 'combined score across all four sections', unit: 'pts total' },
+  { id: 'cardio', label: 'cardio', description: 'ski erg · bike · row', unit: 'pts' },
+  { id: 'strength', label: 'strength', description: 'sandbag · deadlift · press', unit: 'pts' },
+  { id: 'medcon', label: 'med con', description: 'two-movement conditioning block', unit: 'pts' },
+  { id: 'finisher', label: 'finisher', description: 'final knockout station', unit: 'pts' },
 ];
 
 const GENDERS = [
-  { id: 'FF' as const, label: 'Women (FF)' },
-  { id: 'MM' as const, label: 'Men (MM)' },
-  { id: 'MF' as const, label: 'Mixed (MF)' },
+  { id: 'FF' as const, label: 'women (ff)' },
+  { id: 'MM' as const, label: 'men (mm)' },
+  { id: 'MF' as const, label: 'mixed (mf)' },
 ];
 
 const MEDALS = ['🥇', '🥈', '🥉'];
@@ -128,7 +128,7 @@ export default function LeaderboardPage() {
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 24px' }}>
           <img src="/images/icons/community-hearts-white.png" alt="" aria-hidden="true" style={{ height: 40, opacity: 0.12, marginBottom: 20 }} />
           <h1 style={{ fontSize: 'clamp(48px, 9vw, 84px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', marginBottom: 10 }}>leaderboard</h1>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>placeholder results · live on June 6, 2026</p>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>placeholder results · live on june 6, 2026</p>
         </div>
       </div>
 
@@ -196,7 +196,7 @@ export default function LeaderboardPage() {
         <div style={{ marginBottom: 48 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 6 }}>
             <h2 style={{ fontSize: 'clamp(20px, 3.5vw, 30px)', fontWeight: 700, letterSpacing: '-0.02em' }}>
-              {GENDERS.find((g) => g.id === gender)?.label} · {level === 'elite' ? 'Elite' : 'Core'} · {currentSection.label}
+              {GENDERS.find((g) => g.id === gender)?.label} · {level} · {currentSection.label}
             </h2>
             <span style={{ fontSize: 13, color: '#ccc' }}>{filtered.length} teams</span>
           </div>
@@ -236,7 +236,7 @@ export default function LeaderboardPage() {
                         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 8, flexWrap: 'wrap' }}>
                           {(['cardio', 'strength', 'medcon', 'finisher'] as const).map((s) => (
                             <span key={s} style={{ fontSize: 10, color: '#bbb', backgroundColor: '#f7f7f7', padding: '2px 8px', borderRadius: 100 }}>
-                              {s === 'medcon' ? 'Med Con' : s.charAt(0).toUpperCase() + s.slice(1)}: {entry.scores[s]}
+                              {s === 'medcon' ? 'med con' : s}: {entry.scores[s]}
                             </span>
                           ))}
                         </div>
@@ -315,7 +315,7 @@ export default function LeaderboardPage() {
           </>
         )}
 
-        {/* Section winners callout — only on Overall view */}
+        {/* Section winners callout: only on Overall view */}
         {section === 'overall' && (
           <div style={{ marginTop: 64, padding: '32px', borderRadius: 20, backgroundColor: '#EFEFEF', border: '1px solid #f0f0f0' }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: '#707070', marginBottom: 20 }}>section winners</p>
@@ -339,15 +339,15 @@ export default function LeaderboardPage() {
         {/* CTA */}
         <div style={{ marginTop: 48, padding: '40px', borderRadius: 20, backgroundColor: '#EFEFEF', border: '1px solid #f0f0f0', textAlign: 'center' }}>
           <p style={{ fontSize: 11, fontWeight: 700, color: '#707070', marginBottom: 10 }}>not on the board yet?</p>
-          <h3 style={{ fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em', marginBottom: 8 }}>Register your team.</h3>
-          <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Spots are limited. June 6, 2026 · Adidas Sports Base Berlin.</p>
-          <a href="/register/" style={{
+          <h3 style={{ fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em', marginBottom: 8 }}>register your team.</h3>
+          <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>spots are limited. june 6, 2026 · adidas sports base berlin.</p>
+          <a href="https://team-aretas.com/competitions/3444" target="_blank" rel="noopener noreferrer" style={{
             display: 'inline-block', padding: '14px 32px', borderRadius: 100,
             backgroundColor: '#141514', color: '#fff',
             fontWeight: 700, fontSize: 13,
             textDecoration: 'none',
           }}>
-            register now →
+            register now
           </a>
         </div>
       </div>

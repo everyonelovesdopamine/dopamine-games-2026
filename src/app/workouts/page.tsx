@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -54,18 +54,14 @@ const STATIONS: Station[] = [
     number: 4, section: 'STRENGTH & CONDITIONING', format: 'AMRAP · 6 min', score: '20 reps each',
     movements: [
       {
-        name: 'Deadlift', image: '/images/photos/athlete-barbell-grip-smiling.jpg',
+        name: 'Barbell Deadlift', image: '/images/photos/athlete-barbell-grip-smiling.jpg',
         weights: {
-          core:  { FF: '40 kg', Mixed: '50 kg', MM: '60 kg' },
-          elite: { FF: '50 kg', Mixed: '60 kg', MM: '80 kg' },
+          core:  { FF: '50 kg', Mixed: '60 kg', MM: '80 kg' },
+          elite: { FF: '75 kg', Mixed: '80 kg', MM: '100 kg' },
         },
       },
       {
-        name: 'Box Jump Over', image: 'https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=900&q=90&auto=format&fit=crop',
-        weights: {
-          core:  { FF: '20"', Mixed: '20"', MM: '20"' },
-          elite: { FF: '20"', Mixed: '20"', MM: '24"' },
-        },
+        name: 'Burpee', image: '/images/photos/athletes-recovery-games-tee-rowers.jpg',
       },
     ],
   },
@@ -75,16 +71,12 @@ const STATIONS: Station[] = [
       {
         name: 'Sandbag Toss Over Shoulder', image: '/images/photos/athlete-sled-push-competition.jpg',
         weights: {
-          core:  { FF: '15 kg', Mixed: '20 kg', MM: '30 kg' },
-          elite: { FF: '20 kg', Mixed: '30 kg', MM: '40 kg' },
+          core:  { FF: '20 kg', Mixed: '30 kg', MM: '40 kg' },
+          elite: { FF: '30 kg', Mixed: '40 kg', MM: '60 kg' },
         },
       },
       {
         name: 'Sandbag Squat', image: '/images/photos/duo-deadlift-outdoor-turf.jpg',
-        weights: {
-          core:  { FF: '15 kg', Mixed: '20 kg', MM: '30 kg' },
-          elite: { FF: '20 kg', Mixed: '30 kg', MM: '40 kg' },
-        },
       },
     ],
   },
@@ -92,14 +84,18 @@ const STATIONS: Station[] = [
     number: 6, section: 'STRENGTH & CONDITIONING', format: 'AMRAP · 6 min', score: '20 reps each',
     movements: [
       {
-        name: 'Dumbbell Shoulder to Overhead', image: '/images/photos/teammates-barbell-rack-dopamine-tees.jpg',
+        name: 'Dumbbell Push Press', image: '/images/photos/teammates-barbell-rack-dopamine-tees.jpg',
         weights: {
-          core:  { FF: '2 × 7.5 kg', Mixed: '2 × 10 kg', MM: '2 × 12.5 kg', note: 'per dumbbell' },
-          elite: { FF: '2 × 10 kg', Mixed: '2 × 15 kg', MM: '2 × 17.5 kg', note: 'per dumbbell' },
+          core:  { FF: '10 kg', Mixed: '12.5 kg', MM: '15 kg', note: 'per db' },
+          elite: { FF: '15 kg', Mixed: '17.5 kg', MM: '22.5 kg', note: 'per db' },
         },
       },
       {
-        name: 'Burpees', image: '/images/photos/athletes-recovery-games-tee-rowers.jpg',
+        name: 'Box Jump Over', image: 'https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=900&q=90&auto=format&fit=crop',
+        weights: {
+          core:  { FF: '20"', Mixed: '24"', MM: '24"' },
+          elite: { FF: '24"', Mixed: '24"', MM: '30"' },
+        },
       },
     ],
   },
@@ -121,16 +117,28 @@ function getWeightRows(level: 'core' | 'elite') {
   );
 }
 
-// All movements flattened for movement standards section
-const ALL_MOVEMENTS = STATIONS.flatMap((s) =>
-  s.movements.map((m, i) => ({ station: s.number, index: i, total: s.movements.length, ...m }))
-);
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function WorkoutsPage() {
   const [level, setLevel] = useState<'core' | 'elite'>('elite');
+  const [activeSection, setActiveSection] = useState<string>('workout');
   const weightRows = getWeightRows(level);
+
+  useEffect(() => {
+    const ids = ['workout', 'weights', 'how-it-works'];
+    const handler = () => {
+      const offset = 160; // account for nav + sticky tabs
+      let current = ids[0];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top - offset <= 0) current = id;
+      }
+      setActiveSection(current);
+    };
+    handler();
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
 
   return (
     <div style={{ backgroundColor: '#fff', minHeight: '100vh', paddingTop: 64 }}>
@@ -141,34 +149,39 @@ export default function WorkoutsPage() {
         .std-card:hover img { transform: scale(1.04); }
       `}</style>
 
-      {/* Hero */}
-      <div style={{ position: 'relative', height: 440, overflow: 'hidden' }} className="grain-overlay">
+      {/* Hero: editorial spec-sheet overlay */}
+      <div style={{ position: 'relative', height: 'clamp(440px, 60vh, 640px)', overflow: 'hidden' }} className="grain-overlay">
         <img
-          src="/images/photos/duo-deadlift-outdoor-turf.jpg"
+          src="/images/photos/athlete-sled-push-competition.jpg"
           alt="the workouts"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', filter: 'contrast(1.05)' }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center', filter: 'contrast(1.08) saturate(0.9)' }}
         />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(20,21,20,0.15) 0%, rgba(20,21,20,0.9) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(20,21,20,0.25) 0%, rgba(20,21,20,0.35) 50%, rgba(20,21,20,0.9) 100%)' }} />
 
         {/* floating icons */}
         <img src="/images/icons/community-hearts-white.png" alt="" aria-hidden="true"
-          style={{ position: 'absolute', right: '6%', bottom: '12%', height: 80, opacity: 0.05, zIndex: 2, pointerEvents: 'none', animation: 'iconDrift 7s ease-in-out infinite' }} />
+          style={{ position: 'absolute', right: '6%', bottom: '16%', height: 80, opacity: 0.05, zIndex: 2, pointerEvents: 'none', animation: 'iconDrift 7s ease-in-out infinite' }} />
         <img src="/images/icons/runners-speed-white.png" alt="" aria-hidden="true"
-          style={{ position: 'absolute', left: '5%', top: '20%', height: 52, opacity: 0.03, zIndex: 2, pointerEvents: 'none', animation: 'iconDrift 9s ease-in-out infinite', animationDelay: '1.5s' }} />
+          style={{ position: 'absolute', left: '5%', top: '28%', height: 52, opacity: 0.03, zIndex: 2, pointerEvents: 'none', animation: 'iconDrift 9s ease-in-out infinite', animationDelay: '1.5s' }} />
 
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 24px' }}>
-          <img src="/images/icons/community-hearts-white.png" alt="" aria-hidden="true" style={{ height: 44, opacity: 0.12, marginBottom: 24 }} />
-          <h1 style={{ fontSize: 'clamp(48px, 9vw, 84px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#fff', marginBottom: 20 }}>the workouts</h1>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', textAlign: 'left', padding: '0 24px', maxWidth: 900, margin: '0 auto', left: 0, right: 0, zIndex: 2 }}>
+          <h1 style={{ fontSize: 'clamp(56px, 11vw, 120px)', fontWeight: 700, letterSpacing: '-0.04em', color: '#fff', lineHeight: 0.92 }}>the workout.</h1>
         </div>
       </div>
 
       {/* ─── Sponsors strip ─── */}
-      <div style={{ backgroundColor: '#141514', overflow: 'hidden', padding: '22px 0', position: 'relative' }}>
-        <div style={{ display: 'flex', alignItems: 'center', animation: 'marquee 24s linear infinite', whiteSpace: 'nowrap' }}>
-          {Array.from({ length: 2 }).map((_, rep) => (
+      <div style={{ backgroundColor: '#141514', overflow: 'hidden', padding: '22px 0', position: 'relative', marginBottom: 32 }}>
+        <div style={{ display: 'flex', alignItems: 'center', animation: 'marquee 56s linear infinite', whiteSpace: 'nowrap' }}>
+          {Array.from({ length: 4 }).map((_, rep) => (
             <div key={rep} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-              {Array.from({ length: 10 }).map((_, i) => (
-                <img key={`${rep}-${i}`} src="/images/adidas logos/adidas-stripes.png" alt="adidas" style={{ height: 56, marginRight: 84, filter: 'invert(1)', mixBlendMode: 'screen', opacity: 0.5 }} />
+              {[
+                { src: '/images/adidas logos/adidaslogowhite.png', alt: 'adidas', h: 48 },
+                { src: '/images/sponsors/teufel-white.svg', alt: 'teufel', h: 38 },
+                { src: '/images/sponsors/burgermeister-placeholder-white.svg', alt: 'burgermeister', h: 54 },
+                { src: '/images/sponsors/esn-placeholder-white.svg', alt: 'esn', h: 44 },
+                { src: '/images/sponsors/vly-placeholder-white.svg', alt: 'vly', h: 44 },
+              ].map((logo, i) => (
+                <img key={`${rep}-${i}`} src={logo.src} alt={logo.alt} style={{ height: logo.h, marginRight: 84, opacity: 0.55 }} />
               ))}
             </div>
           ))}
@@ -176,55 +189,113 @@ export default function WorkoutsPage() {
       </div>
 
       {/* ─── Sticky section nav ─── */}
-      <div style={{ position: 'sticky', top: 64, zIndex: 20, backgroundColor: '#fff', borderBottom: '1px solid #EFEFEF' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', padding: '12px 24px', display: 'flex', gap: 8, overflowX: 'auto', justifyContent: 'center' }}>
+      <div style={{ position: 'sticky', top: 64, zIndex: 20, backgroundColor: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #EFEFEF' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', padding: '14px 24px', display: 'flex', gap: 8, overflowX: 'auto', justifyContent: 'center' }}>
           {[
-            { label: 'the workout', href: '#workout' },
-            { label: 'weights', href: '#weights' },
-            { label: 'movement standards', href: '#standards' },
-          ].map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              style={{
-                display: 'inline-block', padding: '8px 18px', fontSize: 12, fontWeight: 600,
-                color: '#141514', textDecoration: 'none', whiteSpace: 'nowrap',
-                border: '1px solid #D0D0D0', borderRadius: 100,
-                backgroundColor: '#fff', transition: 'all 0.15s',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#141514'; e.currentTarget.style.borderColor = '#141514'; e.currentTarget.style.color = '#fff'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#fff'; e.currentTarget.style.borderColor = '#D0D0D0'; e.currentTarget.style.color = '#141514'; }}
-            >
-              {item.label}
-            </a>
-          ))}
+            { label: 'the workout', id: 'workout' },
+            { label: 'weights', id: 'weights' },
+            { label: 'how it works', id: 'how-it-works' },
+          ].map((item) => {
+            const isActive = activeSection === item.id;
+            return (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  padding: '10px 20px', fontSize: 12, fontWeight: 700,
+                  color: isActive ? '#fff' : '#141514', textDecoration: 'none', whiteSpace: 'nowrap',
+                  border: `1.5px solid ${isActive ? '#F78DB9' : '#E5E5E5'}`,
+                  borderRadius: 100,
+                  backgroundColor: isActive ? '#F78DB9' : '#fff',
+                  transition: 'all 0.2s',
+                  letterSpacing: '0.01em',
+                }}
+                onMouseEnter={(e) => { if (!isActive) { e.currentTarget.style.borderColor = '#F78DB9'; e.currentTarget.style.color = '#F78DB9'; } }}
+                onMouseLeave={(e) => { if (!isActive) { e.currentTarget.style.borderColor = '#E5E5E5'; e.currentTarget.style.color = '#141514'; } }}
+              >
+                {isActive && <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#fff' }} />}
+                {item.label}
+              </a>
+            );
+          })}
         </div>
       </div>
 
       {/* ═══════════════════════════════════════════════
-          SECTION 1 — THE WORKOUT
+          SECTION 1: THE WORKOUT
       ═══════════════════════════════════════════════ */}
-      <section id="workout" style={{ backgroundColor: '#fff', padding: '64px 24px 80px', position: 'relative' }}>
-        <div style={{ maxWidth: 720, margin: '0 auto' }}>
+      <section id="workout" style={{ backgroundColor: '#fff', padding: '40px 24px 48px', position: 'relative', overflow: 'hidden' }}>
+        {/* Big community-hearts watermark (two people + barbell with heart plates) */}
+        <img
+          src="/images/icons/community-hearts-black.png"
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '12%',
+            transform: 'translateX(-50%)',
+            width: 'clamp(500px, 70vw, 900px)',
+            opacity: 0.14,
+            pointerEvents: 'none',
+            zIndex: 0,
+          }}
+        />
+        <div style={{ maxWidth: 720, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
-          {/* Format stat bar + tagline — dark editorial */}
-          <div style={{ backgroundColor: '#141514', borderRadius: 12, overflow: 'hidden', marginBottom: 56, position: 'relative' }}>
-            {/* subtle icon watermark */}
-            <img src="/images/icons/community-hearts-white.png" alt="" aria-hidden="true"
-              style={{ position: 'absolute', right: 20, top: '50%', transform: 'translateY(-50%)', height: 80, opacity: 0.04, pointerEvents: 'none' }} />
+          {/* Section marker */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 10, color: '#888', letterSpacing: '0.14em' }}>
+            <span style={{ width: 24, height: 1, backgroundColor: '#141514' }} />
+            <span>§01 / THE WORKOUT SPEC</span>
+          </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, padding: '28px 0 20px', position: 'relative', zIndex: 1 }}>
-              {[{ label: 'work', value: '6 min' }, { label: 'rest', value: '90 sec' }, { label: 'format', value: 'teams of 2' }].map((b, i) => (
-                <div key={b.label} style={{ flex: 1, textAlign: 'center', borderRight: i < 2 ? '1px solid rgba(255,255,255,0.1)' : 'none', padding: '0 20px' }}>
-                  <p style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.35)', marginBottom: 6, letterSpacing: '0.1em' }}>{b.label}</p>
-                  <p style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em' }}>{b.value}</p>
+          {/* Format stat cards: editorial spec-sheet layout */}
+          <div style={{ marginBottom: 36 }}>
+            {/* Row 1: work + rest */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
+              {[
+                { code: 'W-01', label: 'work', value: '6', unit: 'min' },
+                { code: 'R-01', label: 'rest', value: '90', unit: 'sec' },
+              ].map((b) => (
+                <div key={b.label} style={{ backgroundColor: '#141514', borderRadius: 10, padding: '18px 18px 16px', position: 'relative', overflow: 'hidden' }}>
+                  <div aria-hidden="true" style={{ position: 'absolute', inset: 0, backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")`, backgroundSize: '180px 180px', opacity: 0.25, mixBlendMode: 'overlay', pointerEvents: 'none' }} />
+                  <div style={{ position: 'relative', zIndex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{b.label}</p>
+                    <span style={{ fontSize: 9, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{b.code}</span>
+                  </div>
+                  <p style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                    <span style={{ fontSize: 40, fontWeight: 700, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1 }}>{b.value}</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{b.unit}</span>
+                  </p>
+                  </div>
                 </div>
               ))}
             </div>
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '14px 0', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.02em' }}>
-                you go, i go <span style={{ margin: '0 8px', opacity: 0.3 }}>—</span> 1 partner working · 1 partner resting
+
+            {/* Row 2: format full-width */}
+            <div style={{ backgroundColor: '#141514', borderRadius: 10, padding: '18px 18px 16px', marginBottom: 14, position: 'relative', overflow: 'hidden' }}>
+              <div aria-hidden="true" style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 8px)', pointerEvents: 'none' }} />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>format</p>
+                  <span style={{ fontSize: 9, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>F-02</span>
+                </div>
+                <p style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>teams of</span>
+                  <span style={{ fontSize: 40, fontWeight: 700, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1 }}>2</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Tagline */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, justifyContent: 'center' }}>
+              <span style={{ height: 1, flex: 1, maxWidth: 60, backgroundColor: '#D0D0D0' }} />
+              <p style={{ fontSize: 11, color: '#707070', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 600 }}>
+                you go, i go · 1 working · 1 resting
               </p>
+              <span style={{ height: 1, flex: 1, maxWidth: 60, backgroundColor: '#D0D0D0' }} />
             </div>
           </div>
 
@@ -235,8 +306,8 @@ export default function WorkoutsPage() {
             return (
               <div key={section} style={{ marginBottom: isLastSection ? 0 : 0 }}>
 
-                {/* Section header — editorial */}
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 24, paddingBottom: 12, borderBottom: '2px solid #141514' }}>
+                {/* Section header: editorial */}
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12, paddingBottom: 10, borderBottom: '2px solid #141514' }}>
                   <h3 style={{ fontSize: 'clamp(22px, 3vw, 30px)', fontWeight: 700, color: '#141514', letterSpacing: '-0.02em' }}>
                     {section.toLowerCase()}
                   </h3>
@@ -248,12 +319,13 @@ export default function WorkoutsPage() {
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   {sectionStations.map((station, si) => (
                     <div key={station.number}>
-                      {/* Station row — editorial card */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '20px 0', position: 'relative' }}>
+                      {/* Station row: editorial card */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '14px 0', position: 'relative' }}>
 
-                        {/* Large number */}
-                        <div style={{ width: 64, flexShrink: 0, textAlign: 'center' }}>
-                          <span style={{ fontSize: 56, fontWeight: 700, color: '#F78DB9', lineHeight: 1, display: 'block' }}>
+                        {/* Large number with spec code */}
+                        <div style={{ width: 72, flexShrink: 0 }}>
+                          <p style={{ fontSize: 9, fontWeight: 600, color: '#888', letterSpacing: '0.1em', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', marginBottom: 2 }}>ST-{String(station.number).padStart(2, '0')}</p>
+                          <span style={{ fontSize: 56, fontWeight: 700, color: '#F78DB9', lineHeight: 0.9, display: 'block', letterSpacing: '-0.04em' }}>
                             {String(station.number).padStart(2, '0')}
                           </span>
                         </div>
@@ -261,13 +333,13 @@ export default function WorkoutsPage() {
                         {/* Content */}
                         <div style={{ flex: 1 }}>
                           {station.movements.length > 1 && (
-                            <p style={{ fontSize: 10, fontWeight: 700, color: '#888', marginBottom: 8, letterSpacing: '0.06em' }}>AMRAP</p>
+                            <p style={{ fontSize: 9, fontWeight: 700, color: '#141514', backgroundColor: '#F78DB9', display: 'inline-block', padding: '3px 8px', borderRadius: 3, marginBottom: 10, letterSpacing: '0.08em', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>AMRAP · 6:00</p>
                           )}
                           {station.movements.map((m, mi) => (
                             <div key={mi} style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: mi < station.movements.length - 1 ? 6 : 0 }}>
                               <span style={{ fontSize: 'clamp(16px, 2.5vw, 20px)', fontWeight: 700, color: '#141514', letterSpacing: '-0.01em' }}>{m.name}</span>
-                              <span style={{ fontSize: 12, fontWeight: 500, color: '#707070', marginLeft: 12, whiteSpace: 'nowrap' }}>
-                                {station.movements.length > 1 ? '20 reps' : station.score}
+                              <span style={{ fontSize: 11, fontWeight: 600, color: '#707070', marginLeft: 12, whiteSpace: 'nowrap', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', letterSpacing: '0.04em' }}>
+                                {station.movements.length > 1 ? '20 REPS' : station.score.toUpperCase()}
                               </span>
                             </div>
                           ))}
@@ -276,7 +348,7 @@ export default function WorkoutsPage() {
 
                       {/* Rest divider between stations */}
                       {si < sectionStations.length - 1 && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '12px 0' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '6px 0' }}>
                           <div style={{ height: 1, flex: 1, backgroundColor: '#D0D0D0' }} />
                           <span style={{ fontSize: 10, fontWeight: 700, color: '#707070', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>90 SEC REST</span>
                           <div style={{ height: 1, flex: 1, backgroundColor: '#D0D0D0' }} />
@@ -288,7 +360,7 @@ export default function WorkoutsPage() {
 
                 {/* Between-section rest */}
                 {!isLastSection && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, margin: '16px 0 32px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, margin: '10px 0 20px' }}>
                     <div style={{ height: 1, flex: 1, backgroundColor: '#D0D0D0' }} />
                     <span style={{ fontSize: 10, fontWeight: 700, color: '#707070', letterSpacing: '0.08em' }}>90 SEC REST</span>
                     <div style={{ height: 1, flex: 1, backgroundColor: '#D0D0D0' }} />
@@ -299,43 +371,74 @@ export default function WorkoutsPage() {
           })}
 
           {/* Footer note */}
-          <p style={{ textAlign: 'center', fontSize: 11, color: '#707070', marginTop: 40, marginBottom: 64, paddingTop: 24, borderTop: '1px solid #EFEFEF' }}>
+          <p style={{ textAlign: 'center', fontSize: 11, color: '#707070', marginTop: 24, marginBottom: 24, paddingTop: 18, borderTop: '1px solid #EFEFEF' }}>
             1 rep = 1 cal = 1 metre · max reps wins
           </p>
 
-          {/* Workout description */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-            {[
-              { tag: 'scoring', headline: '1 point = 1 rep = 1 calorie = 1 meter', body: 'Your goal is simple: score as many points as possible. Every rep, every calorie, every meter count as 1 point.' },
-              { tag: 'how you compete', headline: 'three workouts. one overall winner.', body: 'Cardio, strength & conditioning, and the finisher are each scored independently. A strong performance on two workouts can carry a weaker one — the team with the best combined score takes the win.' },
-              { tag: 'amrap format', headline: 'as many reps as possible in 6 minutes.', body: 'You and your partner cycle through movement 1 for 20 reps, then movement 2 for 20 reps, then back to movement 1 — until time is called. Total reps is your score.' },
-              { tag: 'you go, i go', headline: 'one partner works. one partner rests.', body: 'The resting partner may not touch the equipment until the working partner is done. You cannot start a new movement while your partner is still completing theirs.' },
-            ].map((card) => (
-              <div key={card.tag} style={{ backgroundColor: '#fff', border: '1px solid #E0E0E0', padding: '24px', borderRadius: 4 }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: '#888', marginBottom: 10, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{card.tag}</p>
-                <p style={{ fontSize: 14, fontWeight: 700, color: '#141514', marginBottom: 8, lineHeight: 1.3 }}>{card.headline}</p>
-                <p style={{ fontSize: 13, color: '#707070', lineHeight: 1.65 }}>{card.body}</p>
-              </div>
-            ))}
-          </div>
 
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════
-          SECTION 2 — WEIGHTS
+          SECTION 2: WEIGHTS
       ═══════════════════════════════════════════════ */}
       <section id="weights" style={{ backgroundColor: '#F8F8F8', padding: '80px 24px', position: 'relative' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
 
+          {/* Category intro */}
+          <div style={{ marginBottom: 32 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 10, color: '#888', letterSpacing: '0.14em' }}>
+              <span style={{ width: 24, height: 1, backgroundColor: '#141514' }} />
+              <span>§02 / TWO WAYS TO COMPETE</span>
+            </div>
+            <h2 style={{ fontSize: 'clamp(40px, 7vw, 72px)', fontWeight: 700, color: '#141514', letterSpacing: '-0.03em', lineHeight: 0.95 }}>
+              choose your category.
+            </h2>
+          </div>
+
+          {/* Category cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16, marginBottom: 64 }}>
+            {[
+              {
+                title: 'core',
+                body: 'for anyone who wants to move, have fun, and test themselves without pressure. accessible, low-barrier, and built for newcomers or anyone chasing a full-body challenge with their team.',
+                image: '/images/photos/teammates-barbell-rack-dopamine-tees.jpg',
+                imgPos: 'center 40%',
+                accent: '#F78DB9',
+              },
+              {
+                title: 'elite',
+                body: 'for athletes ready to push their limits. faster, heavier, more demanding. elite is for those who thrive on pressure and want to measure up against the best.',
+                image: '/images/photos/women-sprinting-close-up.jpg',
+                imgPos: 'center 30%',
+                accent: '#185BC5',
+              },
+            ].map((c) => (
+              <div key={c.title} className="grain-overlay" style={{ borderRadius: 12, padding: '140px 32px 32px', position: 'relative', overflow: 'hidden', minHeight: 340, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+                <img src={c.image} alt="" aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: c.imgPos, filter: 'contrast(1.15) saturate(0.75) grayscale(0.15)' }} />
+                <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(180deg, rgba(20,21,20,0.55) 0%, rgba(20,21,20,0.85) 60%, rgba(20,21,20,0.95) 100%)` }} />
+                <div aria-hidden="true" style={{ position: 'absolute', inset: 0, backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")`, backgroundSize: '200px 200px', opacity: 0.55, mixBlendMode: 'overlay', pointerEvents: 'none' }} />
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  <h3 style={{ fontSize: 'clamp(44px, 6vw, 64px)', fontWeight: 700, color: '#fff', marginBottom: 16, letterSpacing: '-0.03em', lineHeight: 0.9 }}>{c.title}</h3>
+                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.82)', lineHeight: 1.6 }}>{c.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
           {/* Header row with toggle */}
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
             <div>
-              <img src="/images/icons/community-hearts-black.png" alt="" aria-hidden="true" style={{ height: 28, opacity: 0.06, marginBottom: 16 }} />
-              <p style={{ fontSize: 11, fontWeight: 700, color: '#707070', marginBottom: 12 }}>weights by category</p>
-              <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 700, color: '#141514' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 10, color: '#888', letterSpacing: '0.14em' }}>
+                <span style={{ width: 24, height: 1, backgroundColor: '#141514' }} />
+                <span>§03 / WEIGHTS BY CATEGORY</span>
+              </div>
+              <h2 style={{ fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 700, color: '#141514', letterSpacing: '-0.03em', lineHeight: 0.95 }}>
                 pick up the right weight.
               </h2>
+              <p style={{ fontSize: 15, color: '#707070', lineHeight: 1.65, maxWidth: 560, marginTop: 16 }}>
+                we designed these categories to keep competition fair while making sure everyone has a place to play. athletes choose the category that best reflects their identity and where they feel they can compete fairly.
+              </p>
             </div>
             {/* CORE / ELITE toggle */}
             <div style={{ display: 'flex', backgroundColor: '#fff', borderRadius: 100, padding: 4, border: '1px solid #e0e0e0' }}>
@@ -379,70 +482,41 @@ export default function WorkoutsPage() {
           </div>
 
           <p style={{ fontSize: 11, color: '#888', marginTop: 16 }}>
-            FF = Female / Female · Mixed = one female + one male · MM = Male / Male
+            ff = female / female · mixed = one female + one male · mm = male / male
           </p>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════
-          SECTION 3 — MOVEMENT STANDARDS
+          SECTION 4: HOW IT WORKS
       ═══════════════════════════════════════════════ */}
-      <section id="standards" style={{ backgroundColor: '#fff', padding: '80px 24px 100px', position: 'relative' }}>
+      <section id="how-it-works" style={{ backgroundColor: '#F8F8F8', padding: '80px 24px 100px', position: 'relative' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <img src="/images/icons/community-hearts-black.png" alt="" aria-hidden="true" style={{ height: 32, opacity: 0.06, marginBottom: 16 }} />
-          <p style={{ fontSize: 11, fontWeight: 700, color: '#707070', marginBottom: 12 }}>how to do the movements</p>
-          <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 700, color: '#141514', marginBottom: 56 }}>
-            movement standards.
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 10, color: '#888', letterSpacing: '0.14em' }}>
+            <span style={{ width: 24, height: 1, backgroundColor: '#141514' }} />
+            <span>§04 / THE FORMAT, EXPLAINED</span>
+          </div>
+          <h2 style={{ fontSize: 'clamp(40px, 7vw, 72px)', fontWeight: 700, color: '#141514', marginBottom: 56, letterSpacing: '-0.03em', lineHeight: 0.95 }}>
+            how it works.
           </h2>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 56 }}>
-            {ALL_MOVEMENTS.map((m) => (
-              <div key={`${m.station}-${m.index}`} className="std-card" style={{ borderBottom: '1px solid #EFEFEF', paddingBottom: 56 }}>
-
-                {/* Headline */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
-                  <div style={{ width: 38, height: 38, borderRadius: 9, backgroundColor: '#141514', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: '#F78DB9' }}>{m.station}</span>
-                  </div>
-                  <h3 style={{ fontSize: 22, fontWeight: 700, color: '#141514' }}>{m.name}</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+            {[
+              { num: '01', tag: 'scoring', headline: '1 point = 1 rep = 1 calorie = 1 metre', body: 'the goal is simple. score as many points as possible. every rep, every calorie, every metre counts as one point.' },
+              { num: '02', tag: 'how you compete', headline: 'three workouts. one overall winner.', body: 'cardio, strength & conditioning, and the finisher are each scored on their own. a strong run on two can carry a weaker one. the team with the best combined score takes the win.' },
+              { num: '03', tag: 'amrap format', headline: 'as many reps as possible in 6 minutes.', body: 'you and your partner cycle through movement 1 for 20 reps, then movement 2 for 20 reps, then back to movement 1, until time is called. total reps is your score.' },
+              { num: '04', tag: 'you go, i go', headline: 'one partner works. one partner rests.', body: 'the resting partner can\'t touch the equipment until the working partner is done. you can\'t start a new movement while your partner is still on theirs.' },
+            ].map((card) => (
+              <div key={card.tag} style={{ backgroundColor: '#fff', border: '1px solid #E5E5E5', padding: '24px', borderRadius: 8, position: 'relative', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 18 }}>
+                  <span style={{ fontSize: 72, fontWeight: 700, color: '#F78DB9', lineHeight: 0.8, letterSpacing: '-0.04em' }}>{card.num}</span>
+                  <span style={{ fontSize: 9, fontWeight: 600, color: '#888', letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', marginTop: 8 }}>{card.tag}</span>
                 </div>
-
-                {/* Video / image */}
-                <div className="grain-overlay" style={{ borderRadius: 16, overflow: 'hidden', aspectRatio: '21/9', position: 'relative', backgroundColor: '#141514' }}>
-                  {m.videoId ? (
-                    <iframe
-                      src={`https://www.youtube.com/embed/${m.videoId}?rel=0&modestbranding=1`}
-                      style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      title={`${m.name} demo`}
-                    />
-                  ) : (
-                    <>
-                      <img
-                        src={m.image}
-                        alt={m.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', transition: 'transform 0.6s ease', filter: 'contrast(1.05)' }}
-                      />
-                      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(to bottom, rgba(20,21,20,0.2) 0%, rgba(20,21,20,0.5) 100%)' }}>
-                        <div style={{ width: 56, height: 56, borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.1)', border: '1.5px solid rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(6px)', transition: 'transform 0.2s' }}>
-                          <div style={{ width: 0, height: 0, borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderLeft: '18px solid rgba(255,255,255,0.8)', marginLeft: 4 }} />
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-
+                <div style={{ height: 1, backgroundColor: '#141514', marginBottom: 16 }} />
+                <p style={{ fontSize: 15, fontWeight: 700, color: '#141514', marginBottom: 10, lineHeight: 1.3, letterSpacing: '-0.01em' }}>{card.headline}</p>
+                <p style={{ fontSize: 13, color: '#707070', lineHeight: 1.65 }}>{card.body}</p>
               </div>
             ))}
-          </div>
-
-          {/* CTA */}
-          <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <p style={{ fontSize: 14, color: '#555', marginBottom: 20 }}>ready to compete?</p>
-            <a href="/register/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 40px', borderRadius: 100, backgroundColor: '#141514', color: '#fff', fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>
-              register your team →
-            </a>
           </div>
         </div>
       </section>

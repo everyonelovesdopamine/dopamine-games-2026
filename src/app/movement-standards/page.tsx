@@ -21,11 +21,11 @@ const MOVEMENTS: Movement[] = [
     station: 1,
     image: 'https://images.unsplash.com/photo-1544033527-b192b5e53e9c?w=800&q=90&auto=format&fit=crop&crop=center',
     standards: [
-      'Athlete must start standing behind the machine with handles at full extension overhead.',
-      'Both handles must be pulled down simultaneously — no alternating.',
-      'Full arm extension must be reached at the top of each stroke.',
-      'Score is total calories. Both athletes alternate — you go, I go.',
-      'The monitor must be reset before the start of each team\'s attempt.',
+      'start standing behind the machine with handles at full extension overhead.',
+      'both handles pulled down together. no alternating.',
+      'full arm extension at the top of every stroke.',
+      'score is total calories. you go, i go with your partner.',
+      'reset the monitor before each team\'s attempt.',
     ],
   },
   {
@@ -35,11 +35,11 @@ const MOVEMENTS: Movement[] = [
     station: 2,
     image: '/images/photos/athlete-rowing-competition-crowd.jpg',
     standards: [
-      'Athlete starts seated with feet securely strapped into the footrests.',
-      'Drive sequence: legs first, then lean back, then pull the handle to the lower sternum.',
-      'Return in the reverse order: arms extend, then hinge forward, then knees bend.',
-      'The damper setting may be adjusted freely between athletes.',
-      'Score is total calories. Alternate with your partner after each set.',
+      'start seated with feet strapped into the footrests.',
+      'drive sequence: legs first, then lean back, then pull the handle to the lower sternum.',
+      'return in reverse: arms extend, hinge forward, knees bend.',
+      'damper setting can be adjusted freely between athletes.',
+      'score is total calories. swap with your partner after each set.',
     ],
   },
   {
@@ -49,11 +49,11 @@ const MOVEMENTS: Movement[] = [
     station: 3,
     image: '/images/photos/athlete-assault-bike-intensity.jpg',
     standards: [
-      'Athlete starts seated. Both feet must remain in the pedals throughout the effort.',
-      'Both hands must be on the handles — either position is allowed.',
-      'Score is total calories displayed on the monitor.',
-      'Monitor must be reset to zero before each changeover.',
-      'Alternate with your partner — you go, I go.',
+      'start seated. both feet stay in the pedals throughout.',
+      'both hands on the handles. either position is fine.',
+      'score is total calories on the monitor.',
+      'reset the monitor to zero before each swap.',
+      'you go, i go with your partner.',
     ],
   },
 
@@ -65,14 +65,14 @@ const MOVEMENTS: Movement[] = [
     station: 4,
     image: '/images/photos/athlete-sled-push-competition.jpg',
     standards: [
-      'Athlete starts standing with the sandbag on the ground in front of them.',
-      'The sandbag must be lifted from the ground and tossed over one shoulder.',
-      'The sandbag must fully clear the shoulder and land completely behind the athlete to count as a rep.',
-      'Shoulders and hips must be facing forward at the start of each rep.',
-      'Alternating shoulders is not required. Athlete may choose preferred side.',
-      'Partner retrieves and repositions the sandbag. Alternate reps between partners.',
+      'start standing with the sandbag on the ground in front of you.',
+      'lift the sandbag off the ground and toss it over one shoulder.',
+      'sandbag must fully clear the shoulder and land behind you to count.',
+      'shoulders and hips face forward at the start of every rep.',
+      'alternating shoulders not required. pick your side.',
+      'partner resets the sandbag. alternate reps between partners.',
     ],
-    note: 'FF Beginner 20 kg / Advanced 30 kg · Mixed Beginner 30 kg / Advanced 40 kg · MM Beginner 40 kg / Advanced 60 kg',
+    note: 'ff core 20 kg / elite 30 kg · mixed core 30 kg / elite 40 kg · mm core 40 kg / elite 60 kg',
   },
   {
     id: 'dumbbell-push-press',
@@ -81,14 +81,14 @@ const MOVEMENTS: Movement[] = [
     station: 5,
     image: '/images/photos/teammates-barbell-rack-dopamine-tees.jpg',
     standards: [
-      'Athlete starts standing with dumbbells at shoulder height, palms facing in.',
-      'Slight dip at the knees — hips stay above parallel throughout the dip.',
-      'Drive both dumbbells overhead to full lockout: arms straight, head through the window.',
-      'Both dumbbells must move together — no staggered pressing.',
-      'Lower under control back to shoulders before next rep.',
-      'Alternate reps with your partner — you go, I go.',
+      'start standing with dumbbells at shoulder height, palms facing in.',
+      'slight dip at the knees. hips stay above parallel through the dip.',
+      'drive both dumbbells overhead to full lockout: arms straight, head through the window.',
+      'both dumbbells move together. no staggered pressing.',
+      'lower under control back to the shoulders before the next rep.',
+      'you go, i go with your partner.',
     ],
-    note: 'Weight shown per dumbbell. FF Beginner 10 kg / Advanced 15 kg · Mixed Beginner 15 kg / Advanced 17.5 kg · MM Beginner 17.5 kg / Advanced 22.5 kg',
+    note: 'weight per dumbbell. ff core 10 kg / elite 15 kg · mixed core 15 kg / elite 17.5 kg · mm core 17.5 kg / elite 22.5 kg',
   },
   {
     id: 'barbell-deadlift',
@@ -97,14 +97,14 @@ const MOVEMENTS: Movement[] = [
     station: 6,
     image: '/images/photos/athlete-barbell-grip-smiling.jpg',
     standards: [
-      'Bar starts on the ground. Athlete sets up with feet hip-width apart.',
-      'Grip must be outside the legs — mixed or double overhand, no straps.',
-      'Back must be neutral throughout the lift — no excessive rounding.',
-      'Rep is complete when hips and knees are fully extended and shoulders are behind the bar.',
-      'Plates must return to the ground and make contact between each rep.',
-      'Dropping the bar from the top is permitted. Controlled descent is not required.',
+      'bar starts on the ground. set up with feet hip-width apart.',
+      'grip outside the legs. mixed or double overhand. no straps.',
+      'neutral back throughout. no excessive rounding.',
+      'rep counts when hips and knees are fully extended and shoulders are behind the bar.',
+      'plates return to the ground and make contact between every rep.',
+      'dropping the bar from the top is fine. controlled descent not required.',
     ],
-    note: 'FF Beginner 50 kg / Advanced 80 kg · Mixed Beginner 60 kg / Advanced 90 kg · MM Beginner 80 kg / Advanced 110 kg',
+    note: 'ff core 50 kg / elite 80 kg · mixed core 60 kg / elite 90 kg · mm core 80 kg / elite 110 kg',
   },
 
   // POWER & CONDITIONING
@@ -115,14 +115,14 @@ const MOVEMENTS: Movement[] = [
     station: 7,
     image: 'https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=800&q=90&auto=format&fit=crop&crop=entropy',
     standards: [
-      'Athlete starts standing facing the box.',
-      'Both feet must leave the ground simultaneously — no step-up allowed.',
-      'Both feet must land on top of the box.',
-      'Athlete then jumps or steps down the other side. Landing on top counts as one rep.',
-      'Step-down off the back is permitted. Jump-off is allowed but not required.',
-      'Do not jump sideways off the box — cross over the top only.',
+      'start standing facing the box.',
+      'both feet leave the ground together. no step-up.',
+      'both feet land on top of the box.',
+      'jump or step down the other side. landing on top counts as the rep.',
+      'step-down off the back is fine. jump-off allowed but not required.',
+      'no sideways jumps off the box. cross over the top only.',
     ],
-    note: 'FF Beginner 20" / Advanced 20" · Mixed Beginner 20" / Advanced 24" · MM Beginner 24" / Advanced 24"',
+    note: 'ff core 20" / elite 20" · mixed core 20" / elite 24" · mm core 24" / elite 24"',
   },
   {
     id: 'burpee',
@@ -131,14 +131,14 @@ const MOVEMENTS: Movement[] = [
     station: 8,
     image: '/images/photos/athletes-recovery-games-tee-rowers.jpg',
     standards: [
-      'Athlete starts standing. One rep = chest to ground + jump with clap overhead.',
-      'Full burpee: the entire body must be flat on the ground — chest, hips, and thighs.',
-      'Knee-down option (Beginner FF and Mixed): knees touch ground before chest, then full extension. Chest must still touch.',
-      'Push up to standing — no worming or snaking. Hips and chest rise together.',
-      'At the top, both feet must leave the ground and hands must clap overhead.',
-      'Alternate reps with your partner.',
+      'start standing. one rep = chest to ground, jump, clap overhead.',
+      'full burpee: the whole body flat on the ground. chest, hips, thighs.',
+      'knee-down option (ff and mixed core): knees touch before chest, then full extension. chest still touches.',
+      'push up to standing. no worming or snaking. hips and chest rise together.',
+      'at the top, both feet leave the ground and hands clap overhead.',
+      'alternate reps with your partner.',
     ],
-    note: 'Full burpee required for MM Beginner and all Advanced athletes. Knee-down permitted for FF and Mixed Beginner.',
+    note: 'full burpee required for mm core and all elite athletes. knee-down allowed for ff and mixed core.',
   },
 
   // FINISHER
@@ -149,13 +149,13 @@ const MOVEMENTS: Movement[] = [
     station: 9,
     image: '/images/photos/women-sprinting-close-up.jpg',
     standards: [
-      'One athlete runs while the other waits at the designated rest zone.',
-      'Athletes alternate — you run, I run. Each lap is completed individually.',
-      'The running athlete must complete the full marked course before tagging in their partner.',
-      'Score is total metres covered by both athletes combined.',
-      'Beginner teams: walking is permitted throughout.',
-      'Advanced teams: running is expected. Walking is not penalised but not encouraged.',
-      '1 metre = 1 point. Maximum metres wins.',
+      'one athlete runs while the other waits in the rest zone.',
+      'you run, i run. each lap is completed individually.',
+      'the running athlete completes the full marked course before tagging their partner.',
+      'score is total metres covered by both athletes combined.',
+      'core teams: walking is fine throughout.',
+      'elite teams: running is expected. walking not penalised but not encouraged.',
+      '1 metre = 1 point. max metres wins.',
     ],
   },
 ];
@@ -177,8 +177,8 @@ const SECTION_COLOR: Record<string, string> = {
 };
 
 const EQUIPMENT = {
-  permitted: ['Chalk', 'Knee sleeves', 'Weightlifting shoes', 'Wrist wraps', 'Shin guards (deadlift)', 'Athletic tape'],
-  prohibited: ['Lifting straps', 'Knee wraps', 'Deadlift suits', 'Ammonia / smelling salts', 'Any gear not listed above'],
+  permitted: ['chalk', 'knee sleeves', 'weightlifting shoes', 'wrist wraps', 'shin guards (deadlift)', 'athletic tape'],
+  prohibited: ['lifting straps', 'knee wraps', 'deadlift suits', 'ammonia / smelling salts', 'any gear not listed above'],
 };
 
 export default function MovementStandardsPage() {
@@ -206,7 +206,7 @@ export default function MovementStandardsPage() {
           movement standards
         </h1>
         <p style={{ fontSize: 15, color: '#555', maxWidth: 520, margin: '0 auto 32px' }}>
-          Read these before you compete. Every rep counts. Every standard applies.
+          read these before you compete. every rep counts. every standard applies.
         </p>
 
         {/* Format info */}
@@ -214,7 +214,7 @@ export default function MovementStandardsPage() {
           {[
             '5 min work · 1 min rest',
             '9 stations',
-            'teams of 2 — you go I go',
+            'teams of 2 · you go, i go',
             '1 rep = 1 cal = 1 metre',
           ].map((item, i) => (
             <span key={i} style={{ fontSize: 12, fontWeight: 600, color: '#888' }}>{item}</span>
@@ -264,7 +264,7 @@ export default function MovementStandardsPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 40, paddingBottom: 16, borderBottom: `2px solid ${accent}` }}>
                 <div style={{ width: 6, height: 24, borderRadius: 3, backgroundColor: accent, flexShrink: 0 }} />
                 <h2 style={{ fontSize: 11, fontWeight: 700, color: '#707070' }}>
-                  — {SECTION_LABELS[section]}
+                  / {SECTION_LABELS[section]}
                 </h2>
               </div>
 
@@ -284,7 +284,7 @@ export default function MovementStandardsPage() {
                         />
                       ) : (
                         <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5f5' }}>
-                          <span style={{ fontSize: 12, color: '#ccc', textAlign: 'center', padding: 20 }}>Photo coming soon</span>
+                          <span style={{ fontSize: 12, color: '#ccc', textAlign: 'center', padding: 20 }}>photo coming soon</span>
                         </div>
                       )}
                       {/* Grain overlay */}
@@ -376,8 +376,8 @@ export default function MovementStandardsPage() {
 
         {/* CTA */}
         <div style={{ textAlign: 'center', marginTop: 64 }}>
-          <p style={{ fontSize: 14, color: '#555', marginBottom: 20 }}>Ready to compete?</p>
-          <a href="/register/" style={{
+          <p style={{ fontSize: 14, color: '#555', marginBottom: 20 }}>ready to compete?</p>
+          <a href="https://team-aretas.com/competitions/3444" target="_blank" rel="noopener noreferrer" style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '16px 40px', borderRadius: 100,
             backgroundColor: '#141514', color: '#fff',

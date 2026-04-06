@@ -1,9 +1,9 @@
 export const EVENT = {
   name: 'The Dopamine Games',
-  tagline: 'PERFORM. PLAY. PARTY. TOGETHER.',
+  tagline: 'perform. play. party. together.',
   date: '6. Juni 2026',
   location: 'Adidas Sports Base Berlin',
-  description: 'A community-driven fitness experience where performance, play, and connection come together. Teams of two compete in inclusive fitness challenges — and when the workouts are done, the day shifts into a full community celebration.',
+  description: 'a community-driven fitness experience where performance, play, and connection come together. teams of two compete in inclusive challenges. when the workouts are done, the day turns into a full community celebration.',
   slug: 'dopamine-games-2026',
 };
 
@@ -21,22 +21,22 @@ export const CATEGORY_LEVELS = {
   core: {
     id: 'core',
     label: 'CORE',
-    description: 'For those building their base and stepping into the arena. Consistent work, real progress, first taste of competition. This is where it starts.',
+    description: 'for the ones building their base and stepping into the arena. consistent work, real progress, first taste of competition. this is where it starts.',
   },
   elite: {
     id: 'elite',
     label: 'ELITE',
-    description: 'For those who train with intent and compete to win. High performance, high standards, no shortcuts. This is where you push the edge.',
+    description: 'for the ones who train with intent and compete to win. high performance, high standards, no shortcuts. this is where you push the edge.',
   },
 };
 
 export const CATEGORIES = [
-  { id: 'mm-core', label: 'MM Core', description: "Men's Team — Core Category", gender: 'MM', level: 'core' },
-  { id: 'mm-elite', label: 'MM Elite', description: "Men's Team — Elite Category", gender: 'MM', level: 'elite' },
-  { id: 'ff-core', label: 'FF Core', description: "Women's Team — Core Category", gender: 'FF', level: 'core' },
-  { id: 'ff-elite', label: 'FF Elite', description: "Women's Team — Elite Category", gender: 'FF', level: 'elite' },
-  { id: 'mf-core', label: 'MF Core', description: 'Mixed Team — Core Category', gender: 'MF', level: 'core' },
-  { id: 'mf-elite', label: 'MF Elite', description: 'Mixed Team — Elite Category', gender: 'MF', level: 'elite' },
+  { id: 'mm-core', label: 'MM Core', description: "men's team, core category", gender: 'MM', level: 'core' },
+  { id: 'mm-elite', label: 'MM Elite', description: "men's team, elite category", gender: 'MM', level: 'elite' },
+  { id: 'ff-core', label: 'FF Core', description: "women's team, core category", gender: 'FF', level: 'core' },
+  { id: 'ff-elite', label: 'FF Elite', description: "women's team, elite category", gender: 'FF', level: 'elite' },
+  { id: 'mf-core', label: 'MF Core', description: 'mixed team, core category', gender: 'MF', level: 'core' },
+  { id: 'mf-elite', label: 'MF Elite', description: 'mixed team, elite category', gender: 'MF', level: 'elite' },
 ];
 
 export const TSHIRT_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];

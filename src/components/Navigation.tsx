@@ -6,7 +6,6 @@ const links = [
   { href: '/', label: 'home' },
   { href: '/workouts/', label: 'workouts' },
   { href: '/open-play/', label: 'open play' },
-  { href: '/leaderboard/', label: 'leaderboard' },
 ];
 
 export default function Navigation() {
@@ -35,7 +34,7 @@ export default function Navigation() {
               {l.label}
             </a>
           ))}
-          <a href="/register/" style={{
+          <a href="https://team-aretas.com/competitions/3444" target="_blank" rel="noopener noreferrer" style={{
             fontSize: 14, fontWeight: 700,
             padding: '9px 22px', borderRadius: 100,
             backgroundColor: '#141514', color: '#fff',
@@ -61,7 +60,7 @@ export default function Navigation() {
               {l.label}
             </a>
           ))}
-          <a href="/register/" onClick={() => setOpen(false)} style={{
+          <a href="https://team-aretas.com/competitions/3444" target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} style={{
             display: 'block', marginTop: 16, textAlign: 'center', padding: 14,
             borderRadius: 100, backgroundColor: '#141514', color: '#fff',
             fontWeight: 700, fontSize: 14,
