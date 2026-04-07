@@ -463,6 +463,48 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ──────────────────────── PHOTO CAROUSEL ──────────────────────── */}
+      <section style={{ overflow: 'hidden', padding: '80px 0' }}>
+        <p style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: '#ccc', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 32 }}>moments from last year</p>
+        <style>{`
+          @keyframes photoScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        `}</style>
+        <div style={{ display: 'flex', animation: 'photoScroll 60s linear infinite', whiteSpace: 'nowrap' }}>
+          {Array.from({ length: 2 }).map((_, rep) => (
+            <div key={rep} style={{ display: 'flex', gap: 12, flexShrink: 0, paddingRight: 12 }}>
+              {[
+                'athlete-sled-push-competition.jpg',
+                'LesMillsxSportsbase_142.jpg',
+                'athlete-barbell-grip-smiling.jpg',
+                'crowd-sitting-field-clapping.jpg',
+                'duo-deadlift-outdoor-turf.jpg',
+                'athlete-rowing-competition-crowd.jpg',
+                'dj-afterparty-crowd-dancing.jpg',
+                'women-sprinting-close-up.jpg',
+                'team-sled-push-cheering.jpg',
+                'athlete-laughing-post-workout.jpg',
+                'athletes-dopamine-games-tee-field.jpg',
+                'duo-assault-bike-recovery.jpg',
+                'afterparty-crowd-outdoor.jpg',
+                'winners-podium-celebration.jpg',
+                'teammates-barbell-rack-dopamine-tees.jpg',
+                'athlete-assault-bike-intensity.jpg',
+                'winner-cheque-presentation.jpg',
+                'athletes-recovery-games-tee-rowers.jpg',
+                'LesMillsxSportsbase_196 (3).jpg',
+              ].map((img, i) => (
+                <img
+                  key={`${rep}-${i}`}
+                  src={`/images/photos/${img}`}
+                  alt=""
+                  style={{ height: 280, width: 'auto', borderRadius: 12, objectFit: 'cover', flexShrink: 0 }}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ──────────────────────── SPONSORS ──────────────────────── */}
       {sponsors.length > 0 && (
         <section style={{ borderTop: '1px solid #EFEFEF', padding: '112px 40px' }}>
