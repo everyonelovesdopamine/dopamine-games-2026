@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <a href="https://www.instagram.com/thedopaminestudio/" target="_blank" rel="noopener noreferrer"
               style={{ fontSize: 12, color: '#999', textDecoration: 'none' }}>instagram</a>
             <a href="mailto:info@thedopaminestudio.com"
-              style={{ fontSize: 12, color: '#999', textDecoration: 'none' }}>info@thedopaminestudio.com</a>
+              style={{ fontSize: 12, color: '#999', textDecoration: 'none', fontFamily: 'system-ui, -apple-system, sans-serif' }}>info@thedopaminestudio.com</a>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 14, flexWrap: 'wrap' }}>
