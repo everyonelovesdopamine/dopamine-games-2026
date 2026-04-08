@@ -174,14 +174,8 @@ export default function WorkoutsPage() {
         <div style={{ display: 'flex', alignItems: 'center', animation: 'marquee 56s linear infinite', whiteSpace: 'nowrap' }}>
           {Array.from({ length: 4 }).map((_, rep) => (
             <div key={rep} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-              {[
-                { src: '/images/adidas logos/adidaslogowhite.png', alt: 'adidas', h: 48 },
-                { src: '/images/sponsors/teufel-white.svg', alt: 'teufel', h: 38 },
-                { src: '/images/sponsors/burgermeister-placeholder-white.svg', alt: 'burgermeister', h: 54 },
-                { src: '/images/sponsors/esn-placeholder-white.svg', alt: 'esn', h: 44 },
-                { src: '/images/sponsors/vly-placeholder-white.svg', alt: 'vly', h: 44 },
-              ].map((logo, i) => (
-                <img key={`${rep}-${i}`} src={logo.src} alt={logo.alt} style={{ height: logo.h, marginRight: 84, opacity: 0.55 }} />
+              {Array.from({ length: 5 }).map((_, i) => (
+                <img key={`${rep}-${i}`} src="/images/adidas logos/adidaslogowhite.png" alt="adidas" style={{ height: 48, marginRight: 84, opacity: 0.55 }} />
               ))}
             </div>
           ))}

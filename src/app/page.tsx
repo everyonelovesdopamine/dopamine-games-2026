@@ -133,14 +133,8 @@ export default function HomePage() {
         <div style={{ display: 'flex', alignItems: 'center', animation: 'marquee 56s linear infinite', whiteSpace: 'nowrap' }}>
           {Array.from({ length: 4 }).map((_, rep) => (
             <div key={rep} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-              {[
-                { src: '/images/adidas logos/adidaslogowhite.png', alt: 'adidas', h: 48 },
-                { src: '/images/sponsors/teufel-white.svg', alt: 'teufel', h: 38 },
-                { src: '/images/sponsors/burgermeister-placeholder-white.svg', alt: 'burgermeister', h: 54 },
-                { src: '/images/sponsors/esn-placeholder-white.svg', alt: 'esn', h: 44 },
-                { src: '/images/sponsors/vly-placeholder-white.svg', alt: 'vly', h: 44 },
-              ].map((logo, i) => (
-                <img key={`${rep}-${i}`} src={logo.src} alt={logo.alt} style={{ height: logo.h, marginRight: 84, opacity: 0.55 }} />
+              {Array.from({ length: 5 }).map((_, i) => (
+                <img key={`${rep}-${i}`} src="/images/adidas logos/adidaslogowhite.png" alt="adidas" style={{ height: 48, marginRight: 84, opacity: 0.55 }} />
               ))}
             </div>
           ))}
@@ -231,7 +225,7 @@ export default function HomePage() {
               }}>
                 {/* label + headline + copy */}
                 <div style={{ marginBottom: 16, position: 'relative', zIndex: 1 }}>
-                  <span style={{ fontFamily: 'monospace', fontSize: 10, color: '#B0B0B0', letterSpacing: '0.12em', textTransform: 'uppercase', display: 'block', marginBottom: 12 }}>{`[ ${ch.label} ]`}</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: 10, color: '#F78DB9', letterSpacing: '0.12em', textTransform: 'uppercase', display: 'block', marginBottom: 12 }}>{`[ ${ch.label} ]`}</span>
                   <h3 style={{ fontSize: 'clamp(22px, 2.5vw, 26px)', fontWeight: 700, color: '#141514', lineHeight: 1.15, marginBottom: 12 }}>{ch.headline}</h3>
                   <p style={{ fontSize: 13, color: '#707070', lineHeight: 1.65 }}>{ch.copy}</p>
                 </div>
