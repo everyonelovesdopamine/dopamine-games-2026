@@ -2,6 +2,7 @@
 
 import './globals.css';
 import Navigation from '@/components/Navigation';
+import { AuthProvider } from '@/lib/auth';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,8 +17,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
       <body style={{ backgroundColor: '#fff', color: '#141514', margin: 0, padding: 0 }}>
-        <Navigation />
-        <main>{children}</main>
+        <AuthProvider>
+          <Navigation />
+          <main>{children}</main>
         <footer style={{ backgroundColor: '#141514', padding: '56px 24px', textAlign: 'center' }}>
           <img src="/logo-white.svg" alt="Dopamine Studio" style={{ height: 26, width: 'auto', margin: '0 auto 16px', display: 'block' }} />
           <p style={{ fontSize: 13, color: '#666' }}>june 6, 2026 · adidas sports base berlin</p>
@@ -40,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
           <p style={{ fontSize: 11, color: '#333', marginTop: 24 }}>© 2026 dopamine studio. all rights reserved.</p>
         </footer>
+        </AuthProvider>
       </body>
     </html>
   );

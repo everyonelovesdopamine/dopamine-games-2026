@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/lib/auth';
+import AuthModal from '@/components/AuthModal';
 
 type Place = {
   id: string;
@@ -44,7 +46,7 @@ const CLASSES: ClassSession[] = [
   { id: 'mg-3', placeId: 'movement-gym', title: 'breathwork',  time: '4:30 – 5:30 pm', totalSlots: 30, slotsTaken: 14, coach: 'isla romero',   coachBio: 'breathwork facilitator. worked with elite endurance athletes on nervous system recovery.',                   coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'paced breathing, box breathing, the art of slowing everything down. leave calmer than you arrived.',                     duration: '60 min', level: 'all levels' },
 
   // clubhouse — les mills
-  { id: 'ch-1', placeId: 'clubhouse', title: 'les mills bodypump',    time: '2:00 – 2:45 pm', totalSlots: 30, slotsTaken: 22, coach: 'les mills team', coachBio: 'certified les mills instructors rotating through every session. high-energy, programmed to the bpm.', coachPhoto: '/images/photos/LesMillsxSportsbase_142.jpg',      description: 'the rep-effect workout. barbell, plates, a room full of people moving together to music.', duration: '45 min', level: 'all levels' },
+  { id: 'ch-1', placeId: 'clubhouse', title: 'les mills bodypump',    time: '2:00 – 2:45 pm', totalSlots: 30, slotsTaken: 30, coach: 'les mills team', coachBio: 'certified les mills instructors rotating through every session. high-energy, programmed to the bpm.', coachPhoto: '/images/photos/LesMillsxSportsbase_142.jpg',      description: 'the rep-effect workout. barbell, plates, a room full of people moving together to music.', duration: '45 min', level: 'all levels' },
   { id: 'ch-2', placeId: 'clubhouse', title: 'les mills bodycombat',  time: '3:00 – 3:45 pm', totalSlots: 30, slotsTaken: 19, coach: 'les mills team', coachBio: 'certified les mills instructors rotating through every session. high-energy, programmed to the bpm.', coachPhoto: '/images/photos/LesMillsxSportsbase_196 (3).jpg',  description: 'fierce, non-contact cardio inspired by martial arts. punch, kick, sweat, repeat.',           duration: '45 min', level: 'all levels' },
   { id: 'ch-3', placeId: 'clubhouse', title: 'les mills bodybalance', time: '4:00 – 4:45 pm', totalSlots: 30, slotsTaken: 8,  coach: 'les mills team', coachBio: 'certified les mills instructors rotating through every session. high-energy, programmed to the bpm.', coachPhoto: '/images/photos/LesMillsxSportsbase_142.jpg',      description: 'yoga, tai chi, and pilates in one flow. a long exhale after the day’s harder efforts.',      duration: '45 min', level: 'all levels' },
 
@@ -94,28 +96,51 @@ function classesConflict(a: ClassSession, b: ClassSession): boolean {
 }
 
 export default function OpenPlayPage() {
+  const { user, bookings, waitlist, addBookings, joinWaitlist } = useAuth();
   const [activePlace, setActivePlace] = useState<string>(PLACES[0].id);
   const [cart, setCart] = useState<string[]>([]);
   const [modalClass, setModalClass] = useState<ClassSession | null>(null);
   const [showCartToast, setShowCartToast] = useState<string | null>(null);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'signup' | 'signin'>('signup');
+  const [authReason, setAuthReason] = useState<string | undefined>();
+  const [confirmedToast, setConfirmedToast] = useState(false);
 
+  const bookedIds = new Set(bookings.map((b) => b.experienceId));
+  const waitlistedIds = new Set(waitlist.map((b) => b.experienceId));
   const visibleClasses = CLASSES.filter((c) => c.placeId === activePlace);
   const cartClasses = CLASSES.filter((c) => cart.includes(c.id));
+  const totalScheduled = cart.length + bookings.length + waitlist.length;
 
   const hasConflict = (candidate: ClassSession): ClassSession | null => {
     for (const c of cartClasses) {
       if (c.id === candidate.id) continue;
       if (classesConflict(candidate, c)) return c;
     }
+    for (const b of bookings) {
+      const booked = CLASSES.find((c) => c.id === b.experienceId);
+      if (!booked || booked.id === candidate.id) continue;
+      if (classesConflict(candidate, booked)) return booked;
+    }
+    for (const w of waitlist) {
+      const wl = CLASSES.find((c) => c.id === w.experienceId);
+      if (!wl || wl.id === candidate.id) continue;
+      if (classesConflict(candidate, wl)) return wl;
+    }
     return null;
   };
 
   const toggleCart = (id: string) => {
+    if (bookedIds.has(id) || waitlistedIds.has(id)) {
+      setShowCartToast('already in your schedule — manage in /account');
+      setTimeout(() => setShowCartToast(null), 2600);
+      return;
+    }
     setCart((prev) => {
       if (prev.includes(id)) {
         return prev.filter((x) => x !== id);
       }
-      if (prev.length >= MAX_CART) {
+      if (prev.length + bookings.length + waitlist.length >= MAX_CART) {
         setShowCartToast('schedule full — three classes max');
         setTimeout(() => setShowCartToast(null), 2400);
         return prev;
@@ -131,9 +156,56 @@ export default function OpenPlayPage() {
           setTimeout(() => setShowCartToast(null), 2600);
           return prev;
         }
+        const bookingConflict = bookings.find((b) => {
+          const booked = CLASSES.find((c) => c.id === b.experienceId);
+          return booked && classesConflict(candidate, booked);
+        });
+        if (bookingConflict) {
+          setShowCartToast(`time clash with ${bookingConflict.title}`);
+          setTimeout(() => setShowCartToast(null), 2600);
+          return prev;
+        }
+        const waitlistConflict = waitlist.find((w) => {
+          const wl = CLASSES.find((c) => c.id === w.experienceId);
+          return wl && classesConflict(candidate, wl);
+        });
+        if (waitlistConflict) {
+          setShowCartToast(`time clash with ${waitlistConflict.title}`);
+          setTimeout(() => setShowCartToast(null), 2600);
+          return prev;
+        }
       }
       return [...prev, id];
     });
+  };
+
+  const handleConfirm = () => {
+    if (!user) {
+      setAuthMode('signup');
+      setAuthReason('create an account to lock in your classes — takes 30 seconds.');
+      setAuthOpen(true);
+      return;
+    }
+    if (!user.emailVerified) {
+      setAuthReason('confirm your email to finish booking — we just sent a code.');
+      setAuthOpen(true);
+      return;
+    }
+    const placeNameById: Record<string, string> = Object.fromEntries(PLACES.map((p) => [p.id, p.name]));
+    const toEntry = (c: ClassSession) => ({
+      experienceId: c.id,
+      title: c.title,
+      place: placeNameById[c.placeId] || c.placeId,
+      time: c.time,
+      coach: c.coach,
+    });
+    const bookable = cartClasses.filter((c) => c.totalSlots - c.slotsTaken > 0);
+    const waitlisted = cartClasses.filter((c) => c.totalSlots - c.slotsTaken <= 0);
+    if (bookable.length > 0) addBookings(bookable.map(toEntry));
+    if (waitlisted.length > 0) joinWaitlist(waitlisted.map(toEntry));
+    setCart([]);
+    setConfirmedToast(true);
+    setTimeout(() => setConfirmedToast(false), 3200);
   };
 
   return (
@@ -246,7 +318,7 @@ export default function OpenPlayPage() {
         </div>
 
         {/* schedule full banner */}
-        {cart.length >= MAX_CART && (
+        {totalScheduled >= MAX_CART && (
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -272,12 +344,15 @@ export default function OpenPlayPage() {
         {/* class grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24, position: 'relative', zIndex: 1 }}>
           {visibleClasses.map((c) => {
+            const isBooked = bookedIds.has(c.id);
+            const isWaitlisted = waitlistedIds.has(c.id);
             const inCart = cart.includes(c.id);
+            const inSchedule = inCart || isBooked || isWaitlisted;
             const slotsLeft = c.totalSlots - c.slotsTaken;
             const isFull = slotsLeft <= 0;
-            const scheduleFull = cart.length >= MAX_CART;
-            const conflictWith = !inCart ? hasConflict(c) : null;
-            const isDimmed = (scheduleFull && !inCart) || !!conflictWith;
+            const scheduleFull = totalScheduled >= MAX_CART;
+            const conflictWith = !inSchedule ? hasConflict(c) : null;
+            const isDimmed = (scheduleFull && !inSchedule) || !!conflictWith;
             const fillPct = (c.slotsTaken / c.totalSlots) * 100;
             const activePlaceColor = PLACES.find((p) => p.id === c.placeId)?.color || '#141514';
 
@@ -288,7 +363,7 @@ export default function OpenPlayPage() {
                 onClick={() => setModalClass(c)}
                 style={{
                   background: '#fff',
-                  border: `1px solid ${inCart ? '#141514' : '#EFEFEF'}`,
+                  border: `1px solid ${inSchedule ? '#141514' : '#EFEFEF'}`,
                   borderRadius: 20,
                   padding: 28,
                   display: 'flex',
@@ -301,13 +376,13 @@ export default function OpenPlayPage() {
                 }}
               >
                 {/* in-schedule ribbon */}
-                {inCart && (
+                {inSchedule && (
                   <div style={{
                     position: 'absolute',
                     top: -10,
                     right: 20,
-                    background: '#F78DB9',
-                    color: '#141514',
+                    background: isBooked ? '#141514' : isWaitlisted ? '#E8A53C' : '#F78DB9',
+                    color: isBooked || isWaitlisted ? '#fff' : '#141514',
                     fontSize: 10,
                     fontWeight: 700,
                     letterSpacing: '0.12em',
@@ -315,7 +390,7 @@ export default function OpenPlayPage() {
                     padding: '5px 12px',
                     borderRadius: 100,
                   }}>
-                    in your schedule
+                    {isBooked ? '✓ booked' : isWaitlisted ? 'on waitlist' : 'in your schedule'}
                   </div>
                 )}
 
@@ -351,25 +426,29 @@ export default function OpenPlayPage() {
 
                 {/* signup button */}
                 <button
-                  onClick={(e) => { e.stopPropagation(); if (!isFull && !isDimmed) toggleCart(c.id); }}
-                  disabled={isFull || isDimmed}
+                  onClick={(e) => { e.stopPropagation(); if (isBooked || isWaitlisted) { window.location.href = '/account'; return; } if (!isDimmed) toggleCart(c.id); }}
+                  disabled={isDimmed}
                   className={`signup-btn ${inCart ? 'signup-btn-remove' : 'signup-btn-add'}`}
                   style={{
                     marginTop: 4,
-                    background: inCart ? '#F78DB9' : '#fff',
-                    color: inCart ? '#141514' : '#141514',
-                    border: `1px solid ${inCart ? '#F78DB9' : '#E0E0E0'}`,
+                    background: isBooked ? '#141514' : isWaitlisted ? '#E8A53C' : inCart ? (isFull ? '#E8A53C' : '#F78DB9') : '#fff',
+                    color: isBooked || isWaitlisted || (inCart && isFull) ? '#fff' : '#141514',
+                    border: `1px solid ${isBooked ? '#141514' : isWaitlisted ? '#E8A53C' : inCart ? (isFull ? '#E8A53C' : '#F78DB9') : isFull ? '#E8A53C' : '#E0E0E0'}`,
                     borderRadius: 100,
                     padding: '12px 20px',
                     fontSize: 13,
                     fontWeight: 600,
                     letterSpacing: '-0.005em',
-                    cursor: isFull || isDimmed ? 'not-allowed' : 'pointer',
-                    opacity: isFull ? 0.4 : 1,
+                    cursor: isDimmed ? 'not-allowed' : 'pointer',
                     fontFamily: 'inherit',
                   }}
                 >
-                  {isFull ? 'full' : inCart ? '✓ added to schedule' : conflictWith ? `clashes with ${conflictWith.title}` : 'add to schedule'}
+                  {isBooked ? 'booked — manage in account'
+                    : isWaitlisted ? 'on waitlist — manage in account'
+                    : inCart ? (isFull ? '✓ joining waitlist' : '✓ added to schedule')
+                    : conflictWith ? `clashes with ${conflictWith.title}`
+                    : isFull ? 'full — join waitlist'
+                    : 'add to schedule'}
                 </button>
               </article>
             );
@@ -399,7 +478,13 @@ export default function OpenPlayPage() {
           {/* header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 10, borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
             <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '-0.005em' }}>
-              {cart.length} of {MAX_CART} in your schedule
+              {cart.length} new {cart.length === 1 ? 'pick' : 'picks'}
+              {(bookings.length > 0 || waitlist.length > 0) && (
+                <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>
+                  {bookings.length > 0 && <> · {bookings.length} booked</>}
+                  {waitlist.length > 0 && <> · {waitlist.length} on waitlist</>}
+                </span>
+              )}
             </span>
           </div>
 
@@ -416,8 +501,17 @@ export default function OpenPlayPage() {
                 borderRadius: 4,
               }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
-                  <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', alignItems: 'center', gap: 6 }}>
                     {c.title}
+                    {c.totalSlots - c.slotsTaken <= 0 && (
+                      <span style={{
+                        fontSize: 9, fontWeight: 700, color: '#141514', background: '#E8A53C',
+                        letterSpacing: '0.1em', textTransform: 'uppercase',
+                        padding: '2px 6px', borderRadius: 100,
+                      }}>
+                        waitlist
+                      </span>
+                    )}
                   </span>
                   <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', letterSpacing: '-0.005em' }}>
                     {c.time}
@@ -453,7 +547,7 @@ export default function OpenPlayPage() {
           </ul>
 
           <button
-            onClick={() => { alert(`signing up for:\n\n${cartClasses.map((c) => `· ${c.title} (${c.time})`).join('\n')}`); }}
+            onClick={handleConfirm}
             style={{
               background: '#fff',
               color: '#141514',
@@ -468,7 +562,7 @@ export default function OpenPlayPage() {
               width: '100%',
             }}
           >
-            confirm sign-up
+            {!user ? 'create account to confirm' : !user.emailVerified ? 'confirm email to book' : 'confirm sign-up'}
           </button>
         </div>
       )}
@@ -494,7 +588,29 @@ export default function OpenPlayPage() {
         </div>
       )}
 
-      {/* update toast text */}
+      {/* booked success toast */}
+      {confirmedToast && (
+        <div style={{
+          position: 'fixed',
+          top: 100,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: '#141514',
+          color: '#fff',
+          borderRadius: 100,
+          padding: '12px 22px',
+          fontSize: 13,
+          fontWeight: 600,
+          zIndex: 60,
+          animation: 'cartSlide 0.2s ease',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
+          display: 'flex', alignItems: 'center', gap: 10,
+        }}>
+          <span>✓ booked. <a href="/account" style={{ color: '#F78DB9', textDecoration: 'underline' }}>view in account</a></span>
+        </div>
+      )}
+
+      <AuthModal open={authOpen} onClose={() => { setAuthOpen(false); setAuthReason(undefined); }} initialMode={authMode} reason={authReason} />
 
       {/* modal */}
       {modalClass && (
