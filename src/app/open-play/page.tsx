@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth';
 import AuthModal from '@/components/AuthModal';
 
@@ -23,47 +23,64 @@ type ClassSession = {
   description: string;
   duration: string;
   level: 'all levels' | 'beginner' | 'intermediate' | 'advanced';
+  instagram?: string;
 };
 
 const PLACES: Place[] = [
   { id: 'strength-gym',   name: 'strength gym',   color: '#185BC5' },
   { id: 'movement-gym',   name: 'movement gym',   color: '#F78DB9' },
   { id: 'clubhouse',      name: 'clubhouse',      color: '#E8A53C' },
+  { id: 'recovery-zone',  name: 'recovery zone',  color: '#D85F93' },
   { id: 'paddle-court',   name: 'padel court',    color: '#4CAE6A' },
   { id: 'back-yard',      name: 'back yard',      color: '#7B5CC4' },
-  { id: 'recovery-zone',  name: 'recovery zone',  color: '#D85F93' },
+  { id: '5k-run',         name: '5k run',         color: '#C97A4A' },
 ];
 
 const CLASSES: ClassSession[] = [
   // strength gym
-  { id: 'sg-1', placeId: 'strength-gym', title: 'calisthenics',      time: '2:00 – 3:00 pm', totalSlots: 30, slotsTaken: 18, coach: 'marta alves',     coachBio: 'former national weightlifter. coaches with calm precision and obsessive attention to setup.',        coachPhoto: '/images/photos/athlete-barbell-grip-smiling.jpg',      description: 'body as your barbell. push-ups, pull-ups, pistols — scaled for every strength level. come ready to move.',                  duration: '60 min', level: 'all levels' },
-  { id: 'sg-2', placeId: 'strength-gym', title: 'upper body pump',   time: '3:15 – 4:15 pm', totalSlots: 30, slotsTaken: 24, coach: 'diego ferreira',  coachBio: 'olympic lifting coach since 2012. trains athletes across five sports. loud, fast, generous with feedback.', coachPhoto: '/images/photos/teammates-barbell-rack-dopamine-tees.jpg', description: 'chest, back, shoulders, arms — on a clock. high-rep burnout session with full guidance on form.',                    duration: '60 min', level: 'intermediate' },
-  { id: 'sg-3', placeId: 'strength-gym', title: 'lower body pump',   time: '4:30 – 5:30 pm', totalSlots: 30, slotsTaken: 9,  coach: 'kenji park',      coachBio: 'biomechanics nerd turned strength coach. specializes in diagnosing the pull.',                           coachPhoto: '/images/photos/duo-deadlift-outdoor-turf.jpg',         description: 'squats, hinges, lunges, and the pump that follows. quads, glutes, hamstrings — all of it.',                              duration: '60 min', level: 'intermediate' },
+  { id: 'sg-1', placeId: 'strength-gym', title: 'calisthenics (pull-up clinic)', time: '2:00 – 2:50 pm', totalSlots: 30, slotsTaken: 18, coach: 'the 1 pull up club',    coachBio: 'beginners’ calisthenics community. for every person and every body — scaled drills, prioritising new movers.',                                  coachPhoto: '/images/photos/athlete-barbell-grip-smiling.jpg',      description: 'the 1 pull up club is a beginners calisthenics community. suitable for all levels, beginners are prioritised — for every person, and every body. this session focuses on building toward your first pull-up.', duration: '50 min', level: 'all levels', instagram: '1pu.club' },
+  { id: 'sg-2', placeId: 'strength-gym', title: 'mobility',   time: '3:00 – 3:50 pm', totalSlots: 30, slotsTaken: 12, coach: 'edgar',   coachBio: 'movement coach blending yoga, gymnastics prep, and primal patterns. eight years coaching athletes back to full range.',          coachPhoto: '/images/photos/athlete-laughing-post-workout.jpg',     description: 'unhurried, unfussy. a flow that restores rotation, opens hips, unlocks shoulders. come barefoot.',         duration: '50 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'sg-3', placeId: 'strength-gym', title: 'calisthenics (handstand clinic)', time: '4:00 – 4:50 pm', totalSlots: 30, slotsTaken: 9,  coach: 'the 1 pull up club',    coachBio: 'beginners’ calisthenics community. for every person and every body — scaled drills, prioritising new movers.',                                  coachPhoto: '/images/photos/athlete-barbell-grip-smiling.jpg',      description: 'the 1 pull up club is a beginners calisthenics community. suitable for all levels, beginners are prioritised — for every person, and every body. this session focuses on the fundamentals of the handstand.',  duration: '50 min', level: 'intermediate', instagram: '1pu.club' },
+  { id: 'sg-4', placeId: 'strength-gym', title: 'mobility',   time: '5:00 – 5:50 pm', totalSlots: 30, slotsTaken: 14, coach: 'edgar',   coachBio: 'movement coach blending yoga, gymnastics prep, and primal patterns. eight years coaching athletes back to full range.',          coachPhoto: '/images/photos/athlete-laughing-post-workout.jpg',     description: 'late-day mobility for tired bodies. slower flow, longer holds, deeper recovery.',                          duration: '50 min', level: 'all levels', instagram: 'tbd' },
 
   // movement gym
-  { id: 'mg-1', placeId: 'movement-gym', title: 'mobility',    time: '2:00 – 3:00 pm', totalSlots: 30, slotsTaken: 12, coach: 'aya nakamura', coachBio: 'movement coach blending yoga, gymnastics prep, and primal patterns. eight years coaching athletes back to full range.', coachPhoto: '/images/photos/athlete-laughing-post-workout.jpg',     description: 'unhurried, unfussy. a flow that restores rotation, opens hips, unlocks shoulders. come barefoot.',                       duration: '60 min', level: 'all levels' },
-  { id: 'mg-2', placeId: 'movement-gym', title: 'yoga',        time: '3:15 – 4:15 pm', totalSlots: 30, slotsTaken: 21, coach: 'sofia kaur',    coachBio: 'yoga teacher and physio. closes every session with the same warm smile.',                                    coachPhoto: '/images/photos/duo-assault-bike-recovery.jpg',         description: 'a vinyasa flow to reset the body mid-day. breath-led, paced for all bodies. mats provided.',                            duration: '60 min', level: 'all levels' },
-  { id: 'mg-3', placeId: 'movement-gym', title: 'breathwork',  time: '4:30 – 5:30 pm', totalSlots: 30, slotsTaken: 14, coach: 'isla romero',   coachBio: 'breathwork facilitator. worked with elite endurance athletes on nervous system recovery.',                   coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'paced breathing, box breathing, the art of slowing everything down. leave calmer than you arrived.',                     duration: '60 min', level: 'all levels' },
+  { id: 'mg-1', placeId: 'movement-gym', title: 'dopamine boxing', time: '3:00 – 3:50 pm', totalSlots: 24, slotsTaken: 16, coach: 'sidney rosa', coachBio: 'former amateur boxer turned coach. teaches footwork and stance before fury. ten years in the corner.',   coachPhoto: '/images/photos/teammates-barbell-rack-dopamine-tees.jpg', description: 'whether you’ve never thrown a punch or you’ve been training for years, this class is built for you. beginners get the real foundations: stance, the 1–6 punches, defence, and footwork — broken down by coaches who actually box. experienced practitioners get the repetition that keeps technique sharp and the high-intensity padwork that makes this one of the best cardio sessions you’ll find anywhere. no ego. no experience required. just real boxing. gloves provided.', duration: '50 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'mg-2', placeId: 'movement-gym', title: 'dopamine boxing', time: '5:00 – 5:50 pm', totalSlots: 24, slotsTaken: 21, coach: 'sidney rosa', coachBio: 'former amateur boxer turned coach. teaches footwork and stance before fury. ten years in the corner.',   coachPhoto: '/images/photos/teammates-barbell-rack-dopamine-tees.jpg', description: 'whether you’ve never thrown a punch or you’ve been training for years, this class is built for you. beginners get the real foundations: stance, the 1–6 punches, defence, and footwork — broken down by coaches who actually box. experienced practitioners get the repetition that keeps technique sharp and the high-intensity padwork that makes this one of the best cardio sessions you’ll find anywhere. no ego. no experience required. just real boxing. gloves provided.',                                     duration: '50 min', level: 'intermediate', instagram: 'tbd' },
 
-  // clubhouse — les mills
-  { id: 'ch-1', placeId: 'clubhouse', title: 'les mills bodypump',    time: '2:00 – 2:45 pm', totalSlots: 30, slotsTaken: 30, coach: 'les mills team', coachBio: 'certified les mills instructors rotating through every session. high-energy, programmed to the bpm.', coachPhoto: '/images/photos/LesMillsxSportsbase_142.jpg',      description: 'the rep-effect workout. barbell, plates, a room full of people moving together to music.', duration: '45 min', level: 'all levels' },
-  { id: 'ch-2', placeId: 'clubhouse', title: 'les mills bodycombat',  time: '3:00 – 3:45 pm', totalSlots: 30, slotsTaken: 19, coach: 'les mills team', coachBio: 'certified les mills instructors rotating through every session. high-energy, programmed to the bpm.', coachPhoto: '/images/photos/LesMillsxSportsbase_196 (3).jpg',  description: 'fierce, non-contact cardio inspired by martial arts. punch, kick, sweat, repeat.',           duration: '45 min', level: 'all levels' },
-  { id: 'ch-3', placeId: 'clubhouse', title: 'les mills bodybalance', time: '4:00 – 4:45 pm', totalSlots: 30, slotsTaken: 8,  coach: 'les mills team', coachBio: 'certified les mills instructors rotating through every session. high-energy, programmed to the bpm.', coachPhoto: '/images/photos/LesMillsxSportsbase_142.jpg',      description: 'yoga, tai chi, and pilates in one flow. a long exhale after the day’s harder efforts.',      duration: '45 min', level: 'all levels' },
+  // clubhouse
+  { id: 'ch-1', placeId: 'clubhouse', title: 'les mills — bodypump',    time: '2:00 – 2:50 pm', totalSlots: 30, slotsTaken: 30, coach: 'les mills team', coachBio: 'certified les mills instructors rotating through every session. high-energy, programmed to the bpm.',                  coachPhoto: '/images/photos/LesMillsxSportsbase_142.jpg',     description: 'the rep-effect workout. barbell, plates, a room full of people moving together to music.',                            duration: '50 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'ch-2', placeId: 'clubhouse', title: 'les mills — bodycombat',  time: '3:00 – 3:50 pm', totalSlots: 30, slotsTaken: 19, coach: 'les mills team', coachBio: 'certified les mills instructors rotating through every session. high-energy, programmed to the bpm.',                  coachPhoto: '/images/photos/LesMillsxSportsbase_196 (3).jpg', description: 'fierce, non-contact cardio inspired by martial arts. punch, kick, sweat, repeat.',                                    duration: '50 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'run-1', placeId: '5k-run', title: '5k run',                       time: '4:00 – 4:50 pm', totalSlots: 80, slotsTaken: 22, coach: 'blend kollektiv', coachBio: 'berlin running collective. hosts friendly 5ks with pace groups, route briefings, and post-run hangs. open door, every pace.',           coachPhoto: '/images/photos/women-sprinting-close-up.jpg',    description: 'outdoor 5k along the river loop. meet in the clubhouse for pace groups, route briefing, and snacks — then head out on the hour. all paces welcome.', duration: '50 min', level: 'all levels', instagram: 'blendkollektiv' },
+  { id: 'ch-4', placeId: 'clubhouse', title: 'les mills — bodybalance', time: '5:00 – 5:50 pm', totalSlots: 30, slotsTaken: 8,  coach: 'les mills team', coachBio: 'certified les mills instructors rotating through every session. high-energy, programmed to the bpm.',                  coachPhoto: '/images/photos/LesMillsxSportsbase_142.jpg',     description: 'yoga, tai chi, and pilates in one flow. a long exhale after the day’s harder efforts.',                                duration: '50 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'ch-5', placeId: 'clubhouse', title: 'dance — hip hop',                    time: '6:00 – 6:50 pm', totalSlots: 30, slotsTaken: 17, coach: 'project x by jay',     coachBio: 'choreographer and movement teacher. teaches beginners how to feel rhythm in their hips first, steps second.',          coachPhoto: '/images/photos/duo-assault-bike-recovery.jpg',   description: 'a beginner-friendly hip hop class to close out the day. learn a short routine to a track everyone knows.',             duration: '50 min', level: 'all levels', instagram: 'tbd' },
+
+  // recovery zone — sauna & ice bathing, 30-min slots every half hour, 2pm – 6:30pm
+  { id: 'rz-1', placeId: 'recovery-zone', title: 'sauna & ice bathing', time: '2:00 – 2:30 pm', totalSlots: 16, slotsTaken: 8,  coach: 'the dopamine team', coachBio: 'the dopamine games crew. running the heat, the cold, and everything in between.', coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'a 30-minute contrast session — sauna heat and ice plunge. enter dry, leave reset.', duration: '30 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'rz-2', placeId: 'recovery-zone', title: 'sauna & ice bathing', time: '2:30 – 3:00 pm', totalSlots: 16, slotsTaken: 11, coach: 'the dopamine team', coachBio: 'the dopamine games crew. running the heat, the cold, and everything in between.', coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'a 30-minute contrast session — sauna heat and ice plunge. enter dry, leave reset.', duration: '30 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'rz-3', placeId: 'recovery-zone', title: 'sauna & ice bathing', time: '3:00 – 3:30 pm', totalSlots: 16, slotsTaken: 9,  coach: 'the dopamine team', coachBio: 'the dopamine games crew. running the heat, the cold, and everything in between.', coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'a 30-minute contrast session — sauna heat and ice plunge. enter dry, leave reset.', duration: '30 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'rz-4', placeId: 'recovery-zone', title: 'sauna & ice bathing', time: '3:30 – 4:00 pm', totalSlots: 16, slotsTaken: 12, coach: 'the dopamine team', coachBio: 'the dopamine games crew. running the heat, the cold, and everything in between.', coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'a 30-minute contrast session — sauna heat and ice plunge. enter dry, leave reset.', duration: '30 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'rz-5', placeId: 'recovery-zone', title: 'sauna & ice bathing', time: '4:00 – 4:30 pm', totalSlots: 16, slotsTaken: 7,  coach: 'the dopamine team', coachBio: 'the dopamine games crew. running the heat, the cold, and everything in between.', coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'a 30-minute contrast session — sauna heat and ice plunge. enter dry, leave reset.', duration: '30 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'rz-6', placeId: 'recovery-zone', title: 'sauna & ice bathing', time: '4:30 – 5:00 pm', totalSlots: 16, slotsTaken: 10, coach: 'the dopamine team', coachBio: 'the dopamine games crew. running the heat, the cold, and everything in between.', coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'a 30-minute contrast session — sauna heat and ice plunge. enter dry, leave reset.', duration: '30 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'rz-7', placeId: 'recovery-zone', title: 'sauna & ice bathing', time: '5:00 – 5:30 pm', totalSlots: 16, slotsTaken: 14, coach: 'the dopamine team', coachBio: 'the dopamine games crew. running the heat, the cold, and everything in between.', coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'a 30-minute contrast session — sauna heat and ice plunge. enter dry, leave reset.', duration: '30 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'rz-8', placeId: 'recovery-zone', title: 'sauna & ice bathing', time: '5:30 – 6:00 pm', totalSlots: 16, slotsTaken: 13, coach: 'the dopamine team', coachBio: 'the dopamine games crew. running the heat, the cold, and everything in between.', coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'a 30-minute contrast session — sauna heat and ice plunge. enter dry, leave reset.', duration: '30 min', level: 'all levels', instagram: 'tbd' },
+  { id: 'rz-9', placeId: 'recovery-zone', title: 'sauna & ice bathing', time: '6:00 – 6:30 pm', totalSlots: 16, slotsTaken: 5,  coach: 'the dopamine team', coachBio: 'the dopamine games crew. running the heat, the cold, and everything in between.', coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'a 30-minute contrast session — sauna heat and ice plunge. enter dry, leave reset.', duration: '30 min', level: 'all levels', instagram: 'tbd' },
 
   // padel court
-  { id: 'pc-1', placeId: 'paddle-court', title: 'americana round 1', time: '2:00 – 2:45 pm', totalSlots: 30, slotsTaken: 16, coach: 'javi morales', coachBio: 'padel pro and coach of twelve years. played professionally on the spanish circuit.', coachPhoto: '/images/photos/LesMillsxSportsbase_142.jpg',      description: 'rotating singles-style play on doubles courts. fast games, new partners every round. rackets provided.', duration: '45 min', level: 'all levels' },
-  { id: 'pc-2', placeId: 'paddle-court', title: 'americana round 2', time: '3:00 – 3:45 pm', totalSlots: 30, slotsTaken: 22, coach: 'ellie chen',   coachBio: 'competitive doubles player and tournament organizer. will keep the bracket running on time.', coachPhoto: '/images/photos/LesMillsxSportsbase_196 (3).jpg',  description: 'second rotation of the americana format. same rules, fresh matchups, faster games.',                      duration: '45 min', level: 'all levels' },
-  { id: 'pc-3', placeId: 'paddle-court', title: 'tabata padel',      time: '4:00 – 5:00 pm', totalSlots: 30, slotsTaken: 11, coach: 'rafa moreno',  coachBio: 'coach specializing in the attacking side of the game. loud serves, louder smashes.',          coachPhoto: '/images/photos/athlete-sled-push-competition.jpg', description: 'high-intensity padel drills on the 20/10 clock. volleys, smashes, and sprints. leave soaked.',               duration: '60 min', level: 'intermediate' },
+  { id: 'pc-1', placeId: 'paddle-court', title: 'padel', time: '2:00 – 2:50 pm', totalSlots: 16, slotsTaken: 10, coach: 'offcourt collective', coachBio: 'berlin padel collective. hosts open courts, mixed-level matches, and friendly americana brackets.', coachPhoto: '/images/photos/LesMillsxSportsbase_142.jpg',        description: 'open padel — rotating doubles on four courts. rackets provided. all levels mixed for fun matches.',      duration: '50 min', level: 'all levels', instagram: 'offcourt_collective' },
+  { id: 'pc-2', placeId: 'paddle-court', title: 'padel', time: '3:00 – 3:50 pm', totalSlots: 16, slotsTaken: 14, coach: 'offcourt collective', coachBio: 'berlin padel collective. hosts open courts, mixed-level matches, and friendly americana brackets.', coachPhoto: '/images/photos/LesMillsxSportsbase_196 (3).jpg',    description: 'americana format — new partners every round, short games, fast resets.',                                  duration: '50 min', level: 'all levels', instagram: 'offcourt_collective' },
+  { id: 'pc-3', placeId: 'paddle-court', title: 'padel', time: '4:00 – 4:50 pm', totalSlots: 16, slotsTaken: 11, coach: 'offcourt collective', coachBio: 'berlin padel collective. hosts open courts, mixed-level matches, and friendly americana brackets.', coachPhoto: '/images/photos/athlete-sled-push-competition.jpg',  description: 'third padel block with a competitive edge. ranked matches if you want them — friendlies if you don’t.',   duration: '50 min', level: 'intermediate', instagram: 'offcourt_collective' },
+  { id: 'pc-4', placeId: 'paddle-court', title: 'padel', time: '5:00 – 5:50 pm', totalSlots: 16, slotsTaken: 7,  coach: 'offcourt collective', coachBio: 'berlin padel collective. hosts open courts, mixed-level matches, and friendly americana brackets.', coachPhoto: '/images/photos/LesMillsxSportsbase_142.jpg',        description: 'final padel block of the day. open play with coaching available courtside.',                              duration: '50 min', level: 'all levels', instagram: 'offcourt_collective' },
 
-  // back yard — beats & burpees
-  { id: 'by-1', placeId: 'back-yard', title: 'beats & burpees — warm-up', time: '3:00 – 3:45 pm', totalSlots: 30, slotsTaken: 13, coach: 'max delacroix', coachBio: 'ex-decathlete who runs playful mixed events for adults who forgot how to play.', coachPhoto: '/images/photos/team-sled-push-cheering.jpg',          description: 'an easier intro to the beats & burpees format. music up, burpees on beat — scaled for fresh legs.',     duration: '45 min', level: 'all levels' },
-  { id: 'by-2', placeId: 'back-yard', title: 'beats & burpees — power hour', time: '4:00 – 5:00 pm', totalSlots: 30, slotsTaken: 26, coach: 'lena hoffmann',  coachBio: 'hybrid athlete and conditioning specialist. makes hard things feel doable.',                coachPhoto: '/images/photos/athlete-assault-bike-intensity.jpg',    description: 'the full hour. bpm-matched music to the work, burpees stacked on everything. high energy, high sweat.', duration: '60 min', level: 'intermediate' },
-  { id: 'by-3', placeId: 'back-yard', title: 'beats & burpees — finale',    time: '5:00 – 6:00 pm', totalSlots: 30, slotsTaken: 7,  coach: 'tomás bravo',    coachBio: 'track & field sprint coach. brings plyometric science and sharp eye for knee-tracking.',    coachPhoto: '/images/photos/women-sprinting-close-up.jpg',           description: 'closing HIIT of the day. max effort to the soundtrack. burpees as a love language.',                    duration: '60 min', level: 'advanced' },
+  // back yard
+  { id: 'by-1', placeId: 'back-yard', title: 'beats & burpees', time: '6:00 – 6:50 pm', totalSlots: 40, slotsTaken: 26, coach: 'beats & burpees', coachBio: 'berlin-born hybrid training crew. hyrox and hiit sessions set to techno and house — workout meets whole experience.', coachPhoto: '/images/photos/athlete-assault-bike-intensity.jpg', description: 'welcome to beats & burpees. we combine strong hyrox and hiit sessions with techno and house music — it’s not only a workout, but a whole experience. closing event of the day.', duration: '50 min', level: 'all levels', instagram: 'beats.and.burpees' },
+];
 
-  // recovery zone
-  { id: 'rz-1', placeId: 'recovery-zone', title: 'athletes only — block 1', time: '2:00 – 2:30 pm', totalSlots: 20, slotsTaken: 14, coach: 'marco lin', coachBio: 'sports physio who works with competing athletes on pre- and post-event recovery. ten years in the recovery lane.', coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'reserved for athletes competing today. ice baths, contrast therapy, compression. 20 slots, 30-min block.', duration: '30 min', level: 'all levels' },
-  { id: 'rz-2', placeId: 'recovery-zone', title: 'athletes only — block 2', time: '3:00 – 3:30 pm', totalSlots: 20, slotsTaken: 11, coach: 'marco lin', coachBio: 'sports physio who works with competing athletes on pre- and post-event recovery. ten years in the recovery lane.', coachPhoto: '/images/photos/athletes-recovery-games-tee-rowers.jpg', description: 'second recovery block for competing athletes. same setup — ice baths, contrast, compression.',             duration: '30 min', level: 'all levels' },
-  { id: 'rz-3', placeId: 'recovery-zone', title: 'open recovery',            time: '4:37 – 5:07 pm', totalSlots: 20, slotsTaken: 6,  coach: 'nora bell', coachBio: 'recovery lead and massage therapist. keeps the whole room calm without trying.',                          coachPhoto: '/images/photos/athlete-laughing-post-workout.jpg',      description: 'open to everyone. drop in for contrast therapy, compression boots, or just a quiet reset.',                 duration: '30 min', level: 'all levels' },
+const TIME_SLOTS = [
+  '2:00 – 2:50 pm',
+  '3:00 – 3:50 pm',
+  '4:00 – 4:50 pm',
+  '5:00 – 5:50 pm',
+  '6:00 – 6:50 pm',
 ];
 
 const MAX_CART = 3;
@@ -105,6 +122,15 @@ export default function OpenPlayPage() {
   const [authMode, setAuthMode] = useState<'signup' | 'signin'>('signup');
   const [authReason, setAuthReason] = useState<string | undefined>();
   const [confirmedToast, setConfirmedToast] = useState(false);
+  const [partyRsvpExists, setPartyRsvpExists] = useState(false);
+  const [partyPopupOpen, setPartyPopupOpen] = useState(false);
+  const [pendingPartyOptIn, setPendingPartyOptIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    try {
+      setPartyRsvpExists(!!localStorage.getItem('party-rsvp'));
+    } catch {}
+  }, [confirmedToast]);
 
   const bookedIds = new Set(bookings.map((b) => b.experienceId));
   const waitlistedIds = new Set(waitlist.map((b) => b.experienceId));
@@ -180,6 +206,15 @@ export default function OpenPlayPage() {
   };
 
   const handleConfirm = () => {
+    // step 1: ask about the after-party (unless they've already RSVP'd or already answered this turn)
+    if (!partyRsvpExists && pendingPartyOptIn === null) {
+      setPartyPopupOpen(true);
+      return;
+    }
+    finalizeBooking();
+  };
+
+  const finalizeBooking = () => {
     if (!user) {
       setAuthMode('signup');
       setAuthReason('create an account to lock in your classes — takes 30 seconds.');
@@ -203,9 +238,34 @@ export default function OpenPlayPage() {
     const waitlisted = cartClasses.filter((c) => c.totalSlots - c.slotsTaken <= 0);
     if (bookable.length > 0) addBookings(bookable.map(toEntry));
     if (waitlisted.length > 0) joinWaitlist(waitlisted.map(toEntry));
+    if (pendingPartyOptIn === true && !partyRsvpExists) {
+      const handle = ((user as { instagram?: string }).instagram || '').replace(/^@/, '').trim();
+      try {
+        localStorage.setItem('party-rsvp', JSON.stringify({
+          name: user.name || '',
+          email: user.email || '',
+          instagram: handle,
+          agreedTerms: true,
+          at: new Date().toISOString(),
+        }));
+      } catch {}
+    }
     setCart([]);
+    setPendingPartyOptIn(null);
     setConfirmedToast(true);
     setTimeout(() => setConfirmedToast(false), 3200);
+  };
+
+  const handlePartyChoiceYes = () => {
+    setPendingPartyOptIn(true);
+    setPartyPopupOpen(false);
+    setTimeout(finalizeBooking, 0);
+  };
+
+  const handlePartyChoiceNo = () => {
+    setPendingPartyOptIn(false);
+    setPartyPopupOpen(false);
+    setTimeout(finalizeBooking, 0);
   };
 
   return (
@@ -235,7 +295,7 @@ export default function OpenPlayPage() {
       {/* Hero */}
       <div className="grain-overlay" style={{ position: 'relative', height: 480, overflow: 'hidden' }}>
         <img
-          src="/images/photos/afterparty-crowd-outdoor.jpg"
+          src="/images/photos/team-sled-push-cheering.jpg"
           alt="open play"
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%', filter: 'brightness(0.85) contrast(1.05)' }}
         />
@@ -275,7 +335,91 @@ export default function OpenPlayPage() {
             </span>
           </h2>
           <p style={{ fontSize: 16, color: '#707070', lineHeight: 1.7, maxWidth: 460, margin: '16px auto 0' }}>
-            six spaces, eighteen sessions. sign up for up to three. tap a class to meet your coach.
+            seven spaces, twenty-one sessions. sign up for up to three. tap a class to meet your coach.
+          </p>
+        </div>
+
+        {/* full day overview */}
+        <div style={{ marginBottom: 64, position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', marginBottom: 20 }}>
+            <div style={{ flex: '0 0 24px', height: 1, background: '#E0E0E0' }} />
+            <span style={{ fontSize: 10, fontWeight: 700, color: '#707070', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+              the full day at a glance
+            </span>
+            <div style={{ flex: '0 0 24px', height: 1, background: '#E0E0E0' }} />
+          </div>
+
+          <div style={{ borderRadius: 16, border: '1px solid #EFEFEF', background: '#fff', boxShadow: '0 4px 24px rgba(20,21,20,0.04)', overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+              <colgroup>
+                <col style={{ width: '11%' }} />
+                {PLACES.map((p) => (
+                  <col key={p.id} />
+                ))}
+              </colgroup>
+              <thead>
+                <tr style={{ background: '#FAFAFA' }}>
+                  <th style={{ padding: '14px 6px', textAlign: 'center', fontSize: 9, fontWeight: 700, color: '#707070', letterSpacing: '0.04em', textTransform: 'uppercase', borderBottom: '1px solid #EFEFEF', whiteSpace: 'nowrap', verticalAlign: 'middle' }}>
+                    time
+                  </th>
+                  {PLACES.map((p) => (
+                    <th key={p.id} style={{ padding: '14px 4px', textAlign: 'center', fontSize: 9, fontWeight: 700, color: '#141514', letterSpacing: '0.04em', textTransform: 'uppercase', borderBottom: '1px solid #EFEFEF', borderLeft: '1px solid #F5F5F5', whiteSpace: 'nowrap', verticalAlign: 'middle' }}>
+                      <span style={{ lineHeight: 1.2 }}>{p.name}</span>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {TIME_SLOTS.map((slot, rowIdx) => (
+                  <tr key={slot} className="overview-row" style={{ background: rowIdx % 2 === 1 ? '#FCFCFC' : '#fff' }}>
+                    <td style={{ padding: '10px 8px', fontSize: 11, fontWeight: 600, color: '#141514', borderBottom: '1px solid #F5F5F5', whiteSpace: 'nowrap', transition: 'color 0.2s ease' }}>
+                      {slot.replace(/ – \d+:\d+/, '')}
+                    </td>
+                    {PLACES.map((p) => {
+                      const c = p.id === 'recovery-zone'
+                        ? CLASSES.find((x) => x.placeId === p.id && parseInt(x.time, 10) === parseInt(slot, 10))
+                        : CLASSES.find((x) => x.placeId === p.id && x.time === slot);
+                      if (!c) {
+                        return (
+                          <td key={p.id} style={{ padding: '8px 4px', borderBottom: '1px solid #F5F5F5', borderLeft: '1px solid #F5F5F5', textAlign: 'center' }}>
+                            <span style={{ color: '#C8C8C8', fontSize: 12 }}>—</span>
+                          </td>
+                        );
+                      }
+                      const isBooked = bookedIds.has(c.id);
+                      const isWaitlisted = waitlistedIds.has(c.id);
+                      const inCart = cart.includes(c.id);
+                      const inSchedule = inCart || isBooked || isWaitlisted;
+                      return (
+                        <td key={p.id} style={{ padding: '6px 4px', borderBottom: '1px solid #F5F5F5', borderLeft: '1px solid #F5F5F5', verticalAlign: 'middle' }}>
+                          <div
+                            style={{
+                              background: inSchedule ? p.color : '#fff',
+                              color: inSchedule ? '#fff' : '#141514',
+                              border: `1px solid ${inSchedule ? p.color : '#EFEFEF'}`,
+                              borderRadius: 8,
+                              padding: '8px 6px',
+                              fontSize: 11,
+                              fontWeight: 600,
+                              letterSpacing: '-0.005em',
+                              textAlign: 'center',
+                              width: '100%',
+                              lineHeight: 1.25,
+                            }}
+                          >
+                            {c.title}
+                          </div>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p style={{ textAlign: 'center', fontSize: 12, color: '#707070', marginTop: 14, letterSpacing: '-0.005em' }}>
+            pick a space below to see coach details and sign up.
           </p>
         </div>
 
@@ -394,12 +538,9 @@ export default function OpenPlayPage() {
                   </div>
                 )}
 
-                {/* time + level row */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+                {/* time row */}
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: '#141514', letterSpacing: '-0.005em' }}>{c.time}</span>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: '#707070', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 10px', border: '1px solid #EFEFEF', borderRadius: 100 }}>
-                    {c.level}
-                  </span>
                 </div>
 
                 {/* title */}
@@ -612,6 +753,123 @@ export default function OpenPlayPage() {
 
       <AuthModal open={authOpen} onClose={() => { setAuthOpen(false); setAuthReason(undefined); }} initialMode={authMode} reason={authReason} />
 
+      {/* party invite popup */}
+      {partyPopupOpen && (
+        <div
+          onClick={() => { setPartyPopupOpen(false); }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(20,21,20,0.75)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 110,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 24,
+            animation: 'overlayIn 0.25s ease',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#141514',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: 24,
+              padding: '36px 32px 28px',
+              maxWidth: 460,
+              width: '100%',
+              position: 'relative',
+              color: '#fff',
+              animation: 'modalIn 0.3s ease',
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => { setPartyPopupOpen(false); }}
+              aria-label="close"
+              style={{
+                position: 'absolute',
+                top: 16,
+                right: 16,
+                background: 'rgba(255,255,255,0.08)',
+                border: 'none',
+                color: '#fff',
+                width: 32,
+                height: 32,
+                borderRadius: '50%',
+                fontSize: 16,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: 'inherit',
+                lineHeight: 1,
+              }}
+            >
+              ×
+            </button>
+
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#F78DB9' }} />
+              after dark
+            </span>
+
+            <h3 style={{ fontSize: 26, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.1, margin: '0 0 14px', color: '#fff' }}>
+              also sign me up for the after-party?
+            </h3>
+
+            <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, margin: '0 0 12px' }}>
+              don&apos;t worry — there&apos;s no charge, and the after-party doesn&apos;t count as one of your three open play experiences. signing up just lets us know you&apos;re coming so we can plan accordingly.
+            </p>
+            <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.5)', lineHeight: 1.55, margin: '0 0 24px' }}>
+              you can also sign up later — head to <strong style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 600 }}>party</strong> in the nav bar any time.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button
+                type="button"
+                onClick={handlePartyChoiceYes}
+                style={{
+                  width: '100%',
+                  padding: '14px 20px',
+                  borderRadius: 100,
+                  background: 'linear-gradient(135deg, #fff 0%, #F78DB9 100%)',
+                  color: '#141514',
+                  border: 'none',
+                  fontWeight: 700,
+                  fontSize: 14,
+                  letterSpacing: '-0.005em',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                yes, sign me up
+              </button>
+              <button
+                type="button"
+                onClick={handlePartyChoiceNo}
+                style={{
+                  width: '100%',
+                  padding: '14px 20px',
+                  borderRadius: 100,
+                  background: 'transparent',
+                  color: 'rgba(255,255,255,0.7)',
+                  border: '1px solid rgba(255,255,255,0.18)',
+                  fontWeight: 600,
+                  fontSize: 13,
+                  letterSpacing: '-0.005em',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                }}
+              >
+                no thanks, just the classes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* modal */}
       {modalClass && (
         <div
@@ -642,46 +900,41 @@ export default function OpenPlayPage() {
               animation: 'modalIn 0.3s ease',
             }}
           >
-            {/* coach hero image */}
-            <div style={{ position: 'relative', height: 220, overflow: 'hidden', borderRadius: '24px 24px 0 0' }}>
+            {/* logo hero on black */}
+            <div style={{ position: 'relative', height: 180, overflow: 'hidden', borderRadius: '24px 24px 0 0', background: '#141514', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <img
-                src={modalClass.coachPhoto}
-                alt={modalClass.coach}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 35%' }}
+                src="/images/icons/community-hearts-white.png"
+                alt="dopamine games"
+                style={{ width: 'auto', height: 96, objectFit: 'contain', opacity: 0.95 }}
               />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(20,21,20,0) 40%, rgba(20,21,20,0.85) 100%)' }} />
-
-              <button
-                onClick={() => setModalClass(null)}
-                className="modal-close"
-                style={{
-                  position: 'absolute',
-                  top: 16,
-                  right: 16,
-                  background: 'rgba(0,0,0,0.4)',
-                  border: 'none',
-                  color: '#fff',
-                  width: 36,
-                  height: 36,
-                  borderRadius: '50%',
-                  fontSize: 18,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontFamily: 'inherit',
-                  lineHeight: 1,
-                }}
-                aria-label="close"
-              >
-                ×
-              </button>
-
-              {/* level pill */}
-              <div style={{ position: 'absolute', bottom: 16, left: 20, fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.14em', textTransform: 'uppercase', padding: '6px 12px', background: 'rgba(255,255,255,0.18)', borderRadius: 100, backdropFilter: 'blur(10px)' }}>
-                {modalClass.level}
-              </div>
             </div>
+
+            <button
+              onClick={() => setModalClass(null)}
+              className="modal-close"
+              style={{
+                position: 'absolute',
+                top: 16,
+                right: 16,
+                background: 'rgba(0,0,0,0.4)',
+                border: 'none',
+                color: '#fff',
+                width: 36,
+                height: 36,
+                borderRadius: '50%',
+                fontSize: 18,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: 'inherit',
+                lineHeight: 1,
+                zIndex: 2,
+              }}
+              aria-label="close"
+            >
+              ×
+            </button>
 
             <div style={{ padding: '28px 32px 32px' }}>
               {/* title + time */}
@@ -708,19 +961,55 @@ export default function OpenPlayPage() {
                 <div style={{ fontSize: 11, fontWeight: 700, color: '#707070', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>
                   your coach
                 </div>
-                <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                  <img
-                    src={modalClass.coachPhoto}
-                    alt={modalClass.coach}
-                    style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
-                  />
-                  <div>
+                <div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 16, fontWeight: 700, color: '#141514', letterSpacing: '-0.01em', marginBottom: 4 }}>
                       {modalClass.coach}
                     </div>
                     <p style={{ fontSize: 13, color: '#707070', lineHeight: 1.55, margin: 0 }}>
                       {modalClass.coachBio}
                     </p>
+                    {modalClass.instagram && (
+                      modalClass.instagram === 'tbd' ? (
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          marginTop: 12,
+                          padding: '6px 12px',
+                          background: '#F5F5F5',
+                          color: '#A0A0A0',
+                          borderRadius: 100,
+                          fontSize: 12,
+                          fontWeight: 600,
+                          letterSpacing: '-0.005em',
+                        }}>
+                          instagram — coming soon
+                        </span>
+                      ) : (
+                        <a
+                          href={`https://instagram.com/${modalClass.instagram}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 6,
+                            marginTop: 12,
+                            padding: '6px 12px',
+                            background: '#141514',
+                            color: '#fff',
+                            borderRadius: 100,
+                            fontSize: 12,
+                            fontWeight: 600,
+                            textDecoration: 'none',
+                            letterSpacing: '-0.005em',
+                          }}
+                        >
+                          @{modalClass.instagram} →
+                        </a>
+                      )
+                    )}
                   </div>
                 </div>
               </div>

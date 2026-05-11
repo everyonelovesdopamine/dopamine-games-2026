@@ -25,6 +25,8 @@ export default function AuthModal({
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [demoCode, setDemoCode] = useState<string | null>(null);
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [termsOpen, setTermsOpen] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -45,6 +47,7 @@ export default function AuthModal({
     setError(null);
     if (!name.trim()) return setError('what should we call you?');
     if (!email.trim() || !email.includes('@')) return setError('a valid email please');
+    if (!termsAgreed) return setError('please agree to the photo & recording terms to continue.');
     setSubmitting(true);
     try {
       const { codeForDemo } = await signUp({ name, email, instagram: instagram.replace(/^@/, '').trim() || undefined });
@@ -172,6 +175,40 @@ export default function AuthModal({
               <label style={labelStyle}>instagram <span style={{ textTransform: 'none', letterSpacing: 0, fontWeight: 500, color: '#A0A0A0' }}>(optional)</span></label>
               <input style={inputStyle} value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="@yourhandle" />
             </div>
+
+            {/* photo & recording terms */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, cursor: 'pointer', fontSize: 12, color: '#141514', lineHeight: 1.45 }}>
+                <input
+                  type="checkbox"
+                  checked={termsAgreed}
+                  onChange={(e) => setTermsAgreed(e.target.checked)}
+                  style={{ marginTop: 2, accentColor: '#F78DB9', flexShrink: 0 }}
+                />
+                <span>
+                  i agree to the{' '}
+                  <button
+                    type="button"
+                    onClick={() => setTermsOpen(!termsOpen)}
+                    style={{ background: 'none', border: 'none', color: '#141514', textDecoration: 'underline', cursor: 'pointer', fontSize: 12, padding: 0, fontFamily: 'inherit', fontWeight: 600 }}
+                  >
+                    photo & recording terms
+                  </button>
+                </span>
+              </label>
+              {termsOpen && (
+                <div style={{ fontSize: 11.5, color: '#707070', lineHeight: 1.55, background: '#FAFAFA', padding: '12px 14px', borderRadius: 8, maxHeight: 220, overflowY: 'auto' }}>
+                  <p style={{ margin: '0 0 8px' }}>by attending this event, you acknowledge and agree that photography, audio, and video recording may take place. by entering the event premises, you:</p>
+                  <ul style={{ margin: '0 0 8px', paddingLeft: 16, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <li>consent to being photographed, filmed, and/or recorded, and to the use of your image, likeness, voice, and name in any media captured during the event.</li>
+                    <li>allow dopamine, its partners, and affiliates to use this media for any purpose, including but not limited to websites, social media, advertising, content creation, and promotional materials — now and in the future.</li>
+                    <li>waive any rights to review, approve, or receive compensation for the use of such media, and release all claims related to privacy, publicity rights, or copyright.</li>
+                  </ul>
+                  <p style={{ margin: 0 }}>if you do not agree with these terms, we kindly ask that you do not enter the event space.</p>
+                </div>
+              )}
+            </div>
+
             {error && <div style={{ fontSize: 13, color: '#D85F93', fontWeight: 600 }}>{error}</div>}
             <button type="submit" disabled={submitting} style={btnPrimary}>
               {submitting ? 'creating account…' : 'create account'}

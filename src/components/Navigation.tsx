@@ -8,6 +8,7 @@ const links = [
   { href: '/', label: 'home' },
   { href: '/workouts/', label: 'workouts' },
   { href: '/open-play/', label: 'open play' },
+  { href: '/party/', label: 'party' },
 ];
 
 export default function Navigation() {
