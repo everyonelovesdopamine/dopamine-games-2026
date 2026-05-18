@@ -7,13 +7,14 @@ type Act = {
   name: string;
   time: string;
   color: string;
+  instagram?: string;
 };
 
 const LINEUP: Act[] = [
-  { id: 'redbull',     name: 'red bull dance battle', time: '7:00 pm',         color: '#E03A3E' },
-  { id: 'fatfingers',  name: 'dj fat fingers',        time: '7:30 – 8:30 pm',  color: '#185BC5' },
-  { id: 'shari',       name: 'shari who',             time: '8:30 – 9:30 pm',  color: '#F78DB9' },
-  { id: 'onit',        name: 'dj onit',               time: '9:30 – 10:30 pm', color: '#E8A53C' },
+  { id: 'redbull',     name: 'red bull dance battle', time: '7:00 pm',         color: '#E03A3E', instagram: 'redbulldance' },
+  { id: 'fatfingers',  name: 'dj fat fingers',        time: '7:30 – 8:30 pm',  color: '#185BC5', instagram: 'simonsaidso' },
+  { id: 'shari',       name: 'shari who',             time: '8:30 – 9:30 pm',  color: '#F78DB9', instagram: 'shari_who' },
+  { id: 'onit',        name: 'dj onit',               time: '9:30 – 10:30 pm', color: '#E8A53C', instagram: 'dj.onit' },
 ];
 
 const RSVP_KEY = 'party-rsvp';
@@ -77,6 +78,8 @@ export default function PartyPage() {
         .act-card { transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease; }
         .act-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.32) !important; box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
         .party-cta:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(247,141,185,0.4); }
+        .ig-link { transition: color 0.2s ease, transform 0.2s ease, border-color 0.2s ease; }
+        .ig-link:hover { color: #F78DB9 !important; border-color: rgba(247,141,185,0.6) !important; transform: scale(1.08); }
       `}</style>
 
       {/* Hero */}
@@ -115,7 +118,7 @@ export default function PartyPage() {
         <div aria-hidden="true" style={{ position: 'absolute', top: 220, left: '-100px', width: 360, height: 360, borderRadius: '50%', background: 'radial-gradient(circle, rgba(24,91,197,0.18) 0%, rgba(24,91,197,0) 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
         {/* header */}
-        <div style={{ textAlign: 'center', marginBottom: 56, position: 'relative', zIndex: 1 }}>
+        <div style={{ textAlign: 'center', marginBottom: 40, position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
             <div style={{ width: 24, height: 1, background: 'rgba(255,255,255,0.2)' }} />
             <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
@@ -124,9 +127,9 @@ export default function PartyPage() {
             <div style={{ width: 24, height: 1, background: 'rgba(255,255,255,0.2)' }} />
           </div>
           <h2 style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 700, lineHeight: 0.95, letterSpacing: '-0.03em', color: '#fff', marginBottom: 16 }}>
-            four acts.<br />
+            celebrate movement<br />
             <span style={{ position: 'relative', display: 'inline-block' }}>
-              one night.
+              together.
               <svg aria-hidden="true" style={{ position: 'absolute', left: 0, right: 0, bottom: -10, width: '100%', height: 12, pointerEvents: 'none' }} viewBox="0 0 300 12" preserveAspectRatio="none">
                 <path d="M2 8 Q 75 2, 150 7 T 298 5" stroke="#F78DB9" strokeWidth="4" fill="none" strokeLinecap="round" />
               </svg>
@@ -137,60 +140,110 @@ export default function PartyPage() {
           </p>
         </div>
 
-        {/* lineup list */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', zIndex: 1 }}>
-          {LINEUP.map((act, idx) => (
-            <article
-              key={act.id}
-              className="act-card"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'auto 1fr auto',
-                alignItems: 'center',
-                gap: 24,
-                padding: '24px 28px',
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 20,
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              {/* accent */}
-              <span aria-hidden="true" style={{
-                position: 'absolute',
-                left: 0, top: 0, bottom: 0,
-                width: 4,
-                background: 'linear-gradient(180deg, #fff 0%, #F78DB9 100%)',
-              }} />
+        {/* top sign-up CTA */}
+        <div style={{ textAlign: 'center', marginBottom: 72, position: 'relative', zIndex: 1 }}>
+          <button
+            type="button"
+            onClick={openModal}
+            className="party-cta"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 10,
+              padding: '16px 36px',
+              borderRadius: 100,
+              background: submitted ? 'rgba(255,255,255,0.08)' : 'linear-gradient(135deg, #fff 0%, #F78DB9 100%)',
+              color: submitted ? '#fff' : '#141514',
+              border: submitted ? '1px solid rgba(255,255,255,0.2)' : 'none',
+              fontWeight: 700,
+              fontSize: 14,
+              letterSpacing: '-0.005em',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              boxShadow: submitted ? 'none' : '0 12px 32px rgba(247,141,185,0.28)',
+              transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+            }}
+          >
+            {submitted ? `you're on the list, ${submitted.name.split(' ')[0]}` : 'sign up for the party'}
+            <span aria-hidden="true" style={{ fontSize: 14, lineHeight: 1 }}>→</span>
+          </button>
+          {!submitted && (
+            <p style={{ marginTop: 12, fontSize: 12, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.04em' }}>
+              free entry — takes 30 seconds
+            </p>
+          )}
+        </div>
 
-              {/* number */}
-              <span style={{
-                fontSize: 28,
-                fontWeight: 700,
-                color: 'rgba(255,255,255,0.32)',
-                letterSpacing: '-0.02em',
-                fontVariantNumeric: 'tabular-nums',
-                minWidth: 38,
-              }}>
-                {String(idx + 1).padStart(2, '0')}
-              </span>
+        {/* poster-style lineup */}
+        <div style={{ position: 'relative', zIndex: 1, padding: '48px 16px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.12)', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+          {/* poster header */}
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.32em', textTransform: 'uppercase', marginBottom: 8 }}>
+            adidas sports base berlin
+          </div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.32em', textTransform: 'uppercase', marginBottom: 40 }}>
+            06 . 06 . 2026 · from 7 pm
+          </div>
 
-              {/* name */}
-              <div style={{ minWidth: 0 }}>
-                <h3 style={{ fontSize: 'clamp(22px, 3.6vw, 30px)', fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', lineHeight: 1.05, margin: 0 }}>
+          {/* lineup poster */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28 }}>
+            {LINEUP.map((act, idx) => (
+              <div key={act.id} style={{ width: '100%', textAlign: 'center' }}>
+                {idx > 0 && (
+                  <div aria-hidden="true" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 24, color: 'rgba(255,255,255,0.18)', fontSize: 10, letterSpacing: '0.4em' }}>
+                    <span style={{ width: 32, height: 1, background: 'rgba(255,255,255,0.12)' }} />
+                    ✦
+                    <span style={{ width: 32, height: 1, background: 'rgba(255,255,255,0.12)' }} />
+                  </div>
+                )}
+                <div style={{
+                  fontSize: idx === 0 ? 'clamp(36px, 8vw, 88px)' : 'clamp(28px, 6vw, 64px)',
+                  fontWeight: 700,
+                  lineHeight: 0.95,
+                  letterSpacing: '-0.04em',
+                  color: '#fff',
+                  textShadow: '0 0 60px rgba(247,141,185,0.25)',
+                  marginBottom: 10,
+                }}>
                   {act.name}
-                </h3>
-              </div>
-
-              {/* time */}
-              <div style={{ textAlign: 'right' }}>
-                <span style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.85)', letterSpacing: '-0.005em', whiteSpace: 'nowrap' }}>
+                </div>
+                <div style={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: '0.28em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(255,255,255,0.6)',
+                  marginBottom: 14,
+                }}>
                   {act.time}
-                </span>
+                </div>
+                <a
+                  href={act.instagram ? `https://instagram.com/${act.instagram}` : '#'}
+                  target={act.instagram ? '_blank' : undefined}
+                  rel={act.instagram ? 'noopener noreferrer' : undefined}
+                  aria-label={`${act.name} on instagram`}
+                  onClick={(e) => { if (!act.instagram) e.preventDefault(); }}
+                  className="ig-link"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 34,
+                    height: 34,
+                    borderRadius: '50%',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    color: 'rgba(255,255,255,0.7)',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                  </svg>
+                </a>
               </div>
-            </article>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* food & drinks note */}

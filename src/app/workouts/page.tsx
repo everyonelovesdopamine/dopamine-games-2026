@@ -125,7 +125,7 @@ export default function WorkoutsPage() {
   const weightRows = getWeightRows(level);
 
   useEffect(() => {
-    const ids = ['workout', 'weights', 'how-it-works'];
+    const ids = ['workout', 'weights', 'how-it-works', 'movement-standards'];
     const handler = () => {
       const offset = 160; // account for nav + sticky tabs
       let current = ids[0];
@@ -189,6 +189,7 @@ export default function WorkoutsPage() {
             { label: 'the workout', id: 'workout' },
             { label: 'weights', id: 'weights' },
             { label: 'how it works', id: 'how-it-works' },
+            { label: 'movement standards', id: 'movement-standards' },
           ].map((item) => {
             const isActive = activeSection === item.id;
             return (
@@ -512,6 +513,142 @@ export default function WorkoutsPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════
+          SECTION 5: MOVEMENT STANDARDS
+      ═══════════════════════════════════════════════ */}
+      <section id="movement-standards" style={{ backgroundColor: '#fff', padding: '80px 24px 120px', position: 'relative' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 10, color: '#888', letterSpacing: '0.14em' }}>
+            <span style={{ width: 24, height: 1, backgroundColor: '#141514' }} />
+            <span>§05 / WHAT COUNTS AS A REP</span>
+          </div>
+          <h2 style={{ fontSize: 'clamp(40px, 7vw, 72px)', fontWeight: 700, color: '#141514', marginBottom: 16, letterSpacing: '-0.03em', lineHeight: 0.95 }}>
+            movement standards.
+          </h2>
+          <p style={{ fontSize: 15, color: '#707070', lineHeight: 1.65, maxWidth: 560, marginBottom: 56 }}>
+            judges will be on the floor counting reps. these are the standards every rep needs to hit to count — same rules for every team, every level.
+          </p>
+
+          <div style={{ borderTop: '1px solid #141514' }}>
+            {([
+              { num: '01', name: 'ski erg',                  video: null,                                      rep: 'one calorie = one point.', body: 'start off the machine. damper is adjustable any time. release the handle high — letting it snap back is a 30-second penalty.' },
+              { num: '02', name: 'row',                      video: null,                                      rep: 'one calorie = one point.', body: 'start off the rower, hands behind the line. damper adjustable. handle must come back to the start before swapping partners.' },
+              { num: '03', name: 'bike',                     video: null,                                      rep: 'one calorie = one point.', body: 'start off the bike. your partner cannot touch the bike until you are seated and off.' },
+              { num: '04', name: 'barbell deadlift',         video: '/movement videos/deadlift 9X16 02.mov',   bullets: [
+                'bar starts on the ground every rep',
+                'conventional stance only — hands outside the knees, no sumo',
+                'straps not allowed (grip is part of the standard)',
+                'rep counts when hips and knees are fully locked and shoulders are behind or directly above the bar',
+                'bar returned under control — dropping only on the final rep',
+              ] },
+              { num: '05', name: 'burpee',                   video: '/movement videos/burpee 9X16 03.mov',     bullets: [
+                'chest, hips, and thighs must touch the ground at the bottom',
+                'athlete crosses the bar — step or jump over are both allowed',
+                'rep counts when both feet are on the opposite side of the bar',
+              ] },
+              { num: '06', name: 'sandbag toss over shoulder', video: '/movement videos/toss 9X16 04.mov',     bullets: [
+                'bag starts fully on the ground every rep',
+                'bag must travel over either shoulder and land on the floor behind the athlete',
+                'rep counts when the bag clears the shoulder, the athlete is standing with hips fully locked out, and the bag lands behind',
+                'only the working partner handles the bag',
+              ] },
+              { num: '07', name: 'sandbag squat',            video: '/movement videos/squat 9X16 05.mov',      bullets: [
+                'bag must be held above the hips for the duration of the rep — bear-hug or on the shoulder, for example',
+                'hip crease must drop below the top of the knee at the bottom',
+                'rep counts when the athlete returns to standing with hips and knees fully locked',
+              ] },
+              { num: '08', name: 'dumbbell push press',      video: '/movement videos/push press 9X16 06.mov', bullets: [
+                'both dumbbells start at the shoulders (front-rack) — and must return to the shoulders before the next rep starts',
+                'one dip-and-drive only — knees bend once, legs drive up, then arms press. re-bending the knees once the arms start pressing is a push jerk and does not count',
+                'both dumbbells finish overhead at the same time, arms fully locked out, biceps by the ears',
+                'hips and knees are fully extended at lockout — straight legs, standing tall',
+              ] },
+              { num: '09', name: 'box jump over',            video: '/movement videos/boxjump 9X16 07.mov',    bullets: [
+                'step or jump are both allowed',
+                'both feet must touch the box',
+                'rep counts when both feet land on the floor on the other side',
+              ] },
+              { num: '10', name: 'max distance run',         video: null,                                      rep: 'score is total metres at the buzzer.', body: 'stay in your lane until the workout starts. cross the line at the end of a lap to count it.' },
+            ] as Array<{ num: string; name: string; video: string | null; rep?: string; body?: string; bullets?: string[] }>).map((m) => (
+              <div key={m.num} style={{
+                display: 'grid',
+                gridTemplateColumns: m.video ? 'auto 1fr auto' : 'auto 1fr',
+                gap: 28,
+                padding: '28px 0',
+                borderBottom: '1px solid #EFEFEF',
+                alignItems: 'start',
+              }}>
+                <span style={{
+                  fontSize: 32,
+                  fontWeight: 700,
+                  color: '#F78DB9',
+                  lineHeight: 1,
+                  letterSpacing: '-0.04em',
+                  fontVariantNumeric: 'tabular-nums',
+                  minWidth: 48,
+                }}>
+                  {m.num}
+                </span>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: m.bullets ? 14 : 8 }}>
+                    <h3 style={{ fontSize: 22, fontWeight: 700, color: '#141514', letterSpacing: '-0.02em', margin: 0, lineHeight: 1.1 }}>
+                      {m.name}
+                    </h3>
+                    <span style={{ fontSize: 10, fontWeight: 600, color: '#888', letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
+                      rep credit
+                    </span>
+                  </div>
+                  {m.bullets ? (
+                    <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      {m.bullets.map((b, i) => (
+                        <li key={i} style={{ position: 'relative', paddingLeft: 18, fontSize: 13, color: '#404040', lineHeight: 1.55 }}>
+                          <span aria-hidden="true" style={{ position: 'absolute', left: 0, top: 8, width: 6, height: 6, borderRadius: '50%', background: '#F78DB9' }} />
+                          {b}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <>
+                      <p style={{ fontSize: 14, fontWeight: 600, color: '#141514', lineHeight: 1.5, margin: '0 0 6px' }}>
+                        {m.rep}
+                      </p>
+                      <p style={{ fontSize: 13, color: '#707070', lineHeight: 1.65, margin: 0 }}>
+                        {m.body}
+                      </p>
+                    </>
+                  )}
+                </div>
+                {m.video && (
+                  <div style={{
+                    width: 'min(140px, 28vw)',
+                    aspectRatio: '9 / 16',
+                    borderRadius: 10,
+                    overflow: 'hidden',
+                    background: '#000',
+                    border: '1px solid #E5E5E5',
+                    position: 'relative',
+                  }}>
+                    <video
+                      src={m.video}
+                      muted
+                      loop
+                      playsInline
+                      autoPlay
+                      preload="metadata"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <p style={{ marginTop: 32, fontSize: 12, color: '#888', lineHeight: 1.6, fontStyle: 'italic' }}>
+            standards are final on the day. judges will no-rep anything that doesn&apos;t meet them — repeat the rep, keep moving.
+          </p>
         </div>
       </section>
 
