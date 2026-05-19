@@ -534,15 +534,28 @@ export default function WorkoutsPage() {
 
           <div style={{ borderTop: '1px solid #141514' }}>
             {([
-              { num: '01', name: 'ski erg',                  video: null,                                      rep: 'one calorie = one point.', body: 'start off the machine. damper is adjustable any time. release the handle high — letting it snap back is a 30-second penalty.' },
-              { num: '02', name: 'row',                      video: null,                                      rep: 'one calorie = one point.', body: 'start off the rower, hands behind the line. damper adjustable. handle must come back to the start before swapping partners.' },
-              { num: '03', name: 'bike',                     video: null,                                      rep: 'one calorie = one point.', body: 'start off the bike. your partner cannot touch the bike until you are seated and off.' },
+              { num: '01', name: 'ski erg',                  video: null,                                      bullets: [
+                'damper is adjustable any time',
+                'one athlete works at a time',
+                'you can pass the handles to your partner',
+              ] },
+              { num: '02', name: 'row',                      video: null,                                      bullets: [
+                'damper is adjustable any time',
+                'you can hand the handle to your partner',
+                'you can help your partner with the straps',
+                'one athlete rowing at a time',
+              ] },
+              { num: '03', name: 'bike',                     video: null,                                      bullets: [
+                'damper can be adjusted any time',
+                'one athlete biking at a time',
+              ] },
               { num: '04', name: 'barbell deadlift',         video: '/movement videos/deadlift 9X16 02.mov',   bullets: [
                 'bar starts on the ground every rep',
                 'conventional stance only — hands outside the knees, no sumo',
                 'straps not allowed (grip is part of the standard)',
                 'rep counts when hips and knees are fully locked and shoulders are behind or directly above the bar',
-                'bar returned under control — dropping only on the final rep',
+                'dropping the bar is allowed',
+                'only one partner can touch the bar at a time',
               ] },
               { num: '05', name: 'burpee',                   video: '/movement videos/burpee 9X16 03.mov',     bullets: [
                 'chest, hips, and thighs must touch the ground at the bottom',
@@ -550,15 +563,15 @@ export default function WorkoutsPage() {
                 'rep counts when both feet are on the opposite side of the bar',
               ] },
               { num: '06', name: 'sandbag toss over shoulder', video: '/movement videos/toss 9X16 04.mov',     bullets: [
-                'bag starts fully on the ground every rep',
-                'bag must travel over either shoulder and land on the floor behind the athlete',
-                'rep counts when the bag clears the shoulder, the athlete is standing with hips fully locked out, and the bag lands behind',
-                'only the working partner handles the bag',
+                'hips must be fully locked out at the top before the bag is tossed over the shoulder',
+                'rep counts when the bag touches the floor',
+                'only one partner can touch the bag at a time',
               ] },
               { num: '07', name: 'sandbag squat',            video: '/movement videos/squat 9X16 05.mov',      bullets: [
                 'bag must be held above the hips for the duration of the rep — bear-hug or on the shoulder, for example',
                 'hip crease must drop below the top of the knee at the bottom',
                 'rep counts when the athlete returns to standing with hips and knees fully locked',
+                'you can pass the bag to your partner when switching',
               ] },
               { num: '08', name: 'dumbbell push press',      video: '/movement videos/push press 9X16 06.mov', bullets: [
                 'both dumbbells start at the shoulders (front-rack) — and must return to the shoulders before the next rep starts',
@@ -571,7 +584,9 @@ export default function WorkoutsPage() {
                 'both feet must touch the box',
                 'rep counts when both feet land on the floor on the other side',
               ] },
-              { num: '10', name: 'max distance run',         video: null,                                      rep: 'score is total metres at the buzzer.', body: 'stay in your lane until the workout starts. cross the line at the end of a lap to count it.' },
+              { num: '10', name: 'max distance run',         video: null,                                      bullets: [
+                'one athlete running on the curved runner at a time',
+              ] },
             ] as Array<{ num: string; name: string; video: string | null; rep?: string; body?: string; bullets?: string[] }>).map((m) => (
               <div key={m.num} style={{
                 display: 'grid',
