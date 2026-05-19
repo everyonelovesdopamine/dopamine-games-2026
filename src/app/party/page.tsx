@@ -246,27 +246,47 @@ export default function PartyPage() {
           </div>
         </div>
 
-        {/* food & drinks note */}
-        <div style={{
-          marginTop: 56,
-          padding: '32px 32px',
-          background: 'linear-gradient(135deg, rgba(247,141,185,0.08) 0%, rgba(24,91,197,0.08) 100%)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: 20,
-          textAlign: 'center',
-          position: 'relative',
-          zIndex: 1,
-        }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12 }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#E8A53C' }} />
-            on site
-          </span>
-          <h3 style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', margin: '0 0 8px' }}>
-            food + drinks all night
-          </h3>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, margin: 0, maxWidth: 440, marginLeft: 'auto', marginRight: 'auto' }}>
-            bar and kitchen open from 6:30 pm. card and cash accepted.
-          </p>
+        {/* on-site extras */}
+        <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, position: 'relative', zIndex: 1 }}>
+          {/* food & drinks */}
+          <div style={{
+            padding: '32px',
+            background: 'linear-gradient(135deg, rgba(247,141,185,0.08) 0%, rgba(24,91,197,0.08) 100%)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 20,
+            textAlign: 'center',
+          }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#E8A53C' }} />
+              on site
+            </span>
+            <h3 style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', margin: '0 0 8px' }}>
+              food + drinks all night
+            </h3>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, margin: 0 }}>
+              various vendors to keep you happy. bring cash and card to keep all options open.
+            </p>
+          </div>
+
+          {/* karaoke room */}
+          <div style={{
+            padding: '32px',
+            background: 'linear-gradient(135deg, rgba(247,141,185,0.12) 0%, rgba(232,165,60,0.08) 100%)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 20,
+            textAlign: 'center',
+          }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#F78DB9' }} />
+              take the stage
+            </span>
+            <h3 style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', margin: '0 0 8px' }}>
+              karaoke room
+            </h3>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, margin: 0 }}>
+              pick your song, grab the mic, have fun. open all night.
+            </p>
+          </div>
         </div>
 
         {/* CTA */}
